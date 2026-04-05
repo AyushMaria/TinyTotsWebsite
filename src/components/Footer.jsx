@@ -1,82 +1,43 @@
-import { Mail, Phone } from 'lucide-react';
-
-const FooterLinks = {
-  Company: ['About Us', 'Our Team', 'Careers', 'Blog'],
-  Programs: ['Infants Program', 'Toddlers Program', 'Preschoolers Program'],
-  Support: ['Contact Us', 'FAQ', 'Privacy Policy', 'Terms of Service'],
-};
-
-const FacebookIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-  </svg>
-);
-
-const InstagramIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-  </svg>
-);
-
-const TwitterIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-  </svg>
-);
+import { MapPin, Clock } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 px-6 md:px-12 lg:px-24 py-16">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-5 gap-10">
-        {/* Brand */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">N</span>
-            </div>
-            <span className="font-display text-xl font-semibold text-white">Nurturing</span>
-          </div>
-          <p className="text-sm leading-relaxed max-w-xs">
-            A safe, fun, and caring environment where safety, learning, and joy
-            come together for your child's bright beginning.
+    <footer className="bg-pure-white text-near-black px-6 md:px-12 lg:px-24 py-16 shadow-card rounded-t-2xl">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-start">
+        {/* Contact Information */}
+        <div className="space-y-6">
+          <h2 className="font-display text-2xl font-bold text-near-black mb-4">Contact Us</h2>
+          <p className="text-secondary-gray leading-relaxed">
+            We'd love to hear from you! Reach out to us for admissions, queries, or to schedule a visit.
           </p>
-          <div className="flex items-center gap-2 text-sm">
-            <Mail size={16} className="text-primary" />
-            <span>hello@nurturing.care</span>
+          <div className="flex items-start gap-3 text-secondary-gray">
+            <MapPin size={20} className="text-rausch-red mt-1" />
+            <p>
+              Adalat Road, behind Royal Enfield showroom, Samadhan Colony, Konkanwadi, Chhatrapati Sambhaji Nagar, Maharashtra, India.
+            </p>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <Phone size={16} className="text-primary" />
-            <span>+1 (555) 000-1234</span>
-          </div>
-          <div className="flex gap-4 pt-2">
-            {[FacebookIcon, InstagramIcon, TwitterIcon].map((Icon, i) => (
-              <a key={i} href="#" className="hover:text-primary transition-colors">
-                <Icon />
-              </a>
-            ))}
+          <div className="flex items-center gap-3 text-secondary-gray">
+            <Clock size={20} className="text-rausch-red" />
+            <p>Hours: 09:30 am – 01:30 pm</p>
           </div>
         </div>
 
-        {/* Links */}
-        {Object.entries(FooterLinks).map(([section, items]) => (
-          <div key={section}>
-            <h4 className="font-semibold text-white mb-4">{section}</h4>
-            <ul className="space-y-2">
-              {items.map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm hover:text-primary transition-colors">
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {/* Google Maps Embed Placeholder */}
+        <div className="w-full h-64 bg-light-surface rounded-xl shadow-card overflow-hidden">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15000.43503527263!2d75.33403325!3d19.86604245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd911f95328105d%3A0x6b4c3e8a7c29367!2sAdalat%20Rd%2C%20Konkanwadi%2C%20Chhatrapati%20Sambhaji%20Nagar%2C%20Maharashtra%20431005%2C%20India!5e0!3m2!1sen!2sus!4v1678912345678!5m2!1sen!2sus"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Tiny Tots Kindergarten Location"
+          ></iframe>
+        </div>
       </div>
-      <div className="max-w-7xl mx-auto border-t border-gray-800 mt-12 pt-6 text-center text-xs text-gray-500">
-        © {new Date().getFullYear()} Nurturing. All rights reserved. Built with ❤️ for little ones.
+      <div className="max-w-7xl mx-auto border-t border-border-gray mt-12 pt-6 text-center text-sm text-secondary-gray">
+        © {new Date().getFullYear()} Tiny Tots Kindergarten. All rights reserved.
       </div>
     </footer>
   );

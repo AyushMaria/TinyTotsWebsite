@@ -15,9 +15,9 @@
   }
 
   body {
-    background-color: #FDF8F2;
-    color: #1a1a1a;
-    font-family: 'Inter', sans-serif;
+    background-color: theme('colors.pure-white');
+    color: theme('colors.near-black');
+    font-family: theme('fontFamily.sans');
   }
 }
 
@@ -27,14 +27,14 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-white px-6 py-3 rounded-full font-medium hover:bg-primary-dark transition-colors duration-200;
+    @apply bg-near-black text-pure-white px-6 py-3 rounded-md font-medium hover:bg-rausch-red transition-colors duration-200;
   }
 
   .btn-outline {
-    @apply border border-primary text-primary px-6 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition-colors duration-200;
+    @apply border border-near-black text-near-black px-6 py-3 rounded-md font-medium hover:border-rausch-red hover:text-rausch-red transition-colors duration-200;
   }
 
   .card {
-    @apply bg-white rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply bg-pure-white rounded-xl p-6 shadow-card transition-shadow duration-200;
   }
 }

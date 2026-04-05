@@ -1,20 +1,17 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
-const links = ['Home', 'About', 'Programs', 'Services', 'Blog', 'Contact'];
+const links = ['Home', 'Our Mission', 'Blog', 'Vibe & Volley'];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-gray-100">
+    <nav className="sticky top-0 z-50 bg-pure-white/90 backdrop-blur-md border-b border-border-gray shadow-card rounded-b-2xl mb-8">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-            <span className="text-white text-sm font-bold">N</span>
-          </div>
-          <span className="font-display text-xl font-semibold text-gray-800">Nurturing</span>
+          <span className="font-display text-xl font-semibold text-near-black">Tiny Tots</span>
         </a>
 
         {/* Desktop Links */}
@@ -22,8 +19,8 @@ export default function Navbar() {
           {links.map((link) => (
             <li key={link}>
               <a
-                href={`#${link.toLowerCase()}`}
-                className="text-sm text-gray-600 hover:text-primary transition-colors"
+                href={`#${link.toLowerCase().replace(/ /g, '-')}`}
+                className="text-sm text-secondary-gray hover:text-rausch-red transition-colors"
               >
                 {link}
               </a>
@@ -32,14 +29,6 @@ export default function Navbar() {
         </ul>
 
         {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <a href="#contact" className="btn-outline text-sm py-2 px-5">
-            Contact Us
-          </a>
-          <a href="#enroll" className="btn-primary text-sm py-2 px-5">
-            Enroll Now
-          </a>
-        </div>
 
         {/* Mobile Toggle */}
         <button className="md:hidden" onClick={() => setOpen(!open)}>
@@ -49,20 +38,17 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden bg-cream px-6 pb-6 flex flex-col gap-4">
+        <div className="md:hidden bg-pure-white px-6 pb-6 flex flex-col gap-4 shadow-card">
           {links.map((link) => (
             <a
               key={link}
-              href={`#${link.toLowerCase()}`}
-              className="text-gray-600 hover:text-primary text-sm py-2 border-b border-gray-100"
+              href={`#${link.toLowerCase().replace(/ /g, '-')}`}
+              className="text-secondary-gray hover:text-rausch-red text-sm py-2 border-b border-border-gray"
               onClick={() => setOpen(false)}
             >
               {link}
             </a>
           ))}
-          <a href="#enroll" className="btn-primary text-sm text-center mt-2">
-            Enroll Now
-          </a>
         </div>
       )}
     </nav>
