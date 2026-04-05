@@ -1,0 +1,40 @@
+/* ✅ Correct Tailwind v3 syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #FDF8F2;
+    color: #1a1a1a;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-6 py-20 md:px-12 lg:px-24;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded-full font-medium hover:bg-primary-dark transition-colors duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-primary text-primary px-6 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+}
