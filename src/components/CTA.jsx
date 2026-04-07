@@ -1,7 +1,7 @@
 export default function CTA() {
   return (
     <section id="enroll" className="section-padding">
-      <div className="max-w-4xl mx-auto bg-primary rounded-4xl p-12 md:p-16 text-center space-y-6">
+      <div className="max-w-4xl mx-auto bg-rausch-red rounded-4xl p-12 md:p-16 text-center space-y-6">
         <h2 className="font-display text-3xl md:text-5xl font-bold text-white leading-tight">
           Give Your Little One the Loving Care They Deserve
         </h2>

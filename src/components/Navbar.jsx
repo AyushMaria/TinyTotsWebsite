@@ -29,6 +29,9 @@ export default function Navbar() {
         </ul>
 
         {/* CTA */}
+        <a href="#enroll" className="btn-primary hidden md:block">
+          Enroll Now
+        </a>
 
         {/* Mobile Toggle */}
         <button className="md:hidden" onClick={() => setOpen(!open)}>

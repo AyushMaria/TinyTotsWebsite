@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap');
+
 /* ✅ Correct Tailwind v3 syntax */
 @tailwind base;
 @tailwind components;
@@ -15,9 +17,14 @@
   }
 
   body {
-    background-color: theme('colors.pure-white');
-    color: theme('colors.near-black');
+    background-color: theme('colors.premium-almond');
+    color: theme('colors.premium-charcoal');
     font-family: theme('fontFamily.sans');
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: theme('fontFamily.display');
+    color: theme('colors.premium-forest');
   }
 }
 
@@ -27,14 +34,14 @@
   }
 
   .btn-primary {
-    @apply bg-near-black text-pure-white px-6 py-3 rounded-md font-medium hover:bg-rausch-red transition-colors duration-200;
+    @apply bg-premium-sage text-premium-almond px-6 py-3 rounded-xl font-medium hover:bg-premium-forest transition-colors duration-300;
   }
 
   .btn-outline {
-    @apply border border-near-black text-near-black px-6 py-3 rounded-md font-medium hover:border-rausch-red hover:text-rausch-red transition-colors duration-200;
+    @apply border border-premium-sage text-premium-forest px-6 py-3 rounded-xl font-medium hover:bg-premium-sage hover:text-premium-almond transition-colors duration-300;
   }
 
   .card {
-    @apply bg-pure-white rounded-xl p-6 shadow-card transition-shadow duration-200;
+    @apply bg-pure-white rounded-xl p-6 shadow-card transition-shadow duration-300;
   }
 }

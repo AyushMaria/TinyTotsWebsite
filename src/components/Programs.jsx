@@ -9,7 +9,7 @@ const programs = [
     age: '0 months – 18 months',
     desc: 'Our infant program is all about providing cozy care and fun experiences for your little one right from the start. We use gentle play to help babies safely explore their world while building trust, curiosity, and confidence.',
     activities: ['Tummy Time & Development', 'Sensory Play', 'Language & Communication', 'Bonding & Comfort'],
-    image: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=600&q=80',
+    image: '/images/tinytots-image-26.jpg',
   },
   {
     id: 'toddlers',
@@ -18,7 +18,7 @@ const programs = [
     age: '18 months – 3 Years',
     desc: 'Our toddler program nurtures curiosity and supports early development through playful exploration. We provide a safe, caring space where toddlers build language, motor skills, and social connections.',
     activities: ['Creative Play', 'Story-time & Language', 'Outdoor Exploration', 'Social Interaction', 'Music & Movement'],
-    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&q=80',
+    image: '/images/tinytots-image-27.jpg',
   },
   {
     id: 'preschoolers',
@@ -27,8 +27,7 @@ const programs = [
     age: '3 Years – 5 Years',
     desc: 'Our preschool program builds a strong academic and social foundation through structured yet fun activities. Children develop critical thinking, collaboration, and a love of learning.',
     activities: ['Early Literacy', 'STEM Exploration', 'Art & Creativity', 'Group Projects', 'Physical Education'],
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
-  },
+    image: '/images/tinytots-image-28.jpg',
 ];
 
 export default function Programs() {

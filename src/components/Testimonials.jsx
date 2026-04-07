@@ -1,7 +1,7 @@
 const teachers = [
-  { name: 'Ms. Priya', qualities: 'Nurturing and experienced educator dedicated to fostering a love for learning in young children.', image: '/images/tinytots-image-23.jpg' },
-  { name: 'Mr. Sameer', qualities: 'Passionate about early childhood development, creating engaging and interactive learning experiences.', image: '/images/tinytots-image-24.jpg' },
-  { name: 'Ms. Ananya', qualities: 'Highly trained in modern early childhood education methodologies, inspiring curiosity and creativity.', image: '/images/tinytots-image-25.jpg' },
+  { name: 'Our Educator 1', qualities: 'Nurturing and experienced educator dedicated to fostering a love for learning in young children.', image: '/images/tinytots-image-23.jpg' },
+  { name: 'Our Educator 2', qualities: 'Passionate about early childhood development, creating engaging and interactive learning experiences.', image: '/images/tinytots-image-24.jpg' },
+  { name: 'Our Educator 3', qualities: 'Highly trained in modern early childhood education methodologies, inspiring curiosity and creativity.', image: '/images/tinytots-image-25.jpg' },
 ];
 
 export default function Testimonials() {
@@ -23,7 +23,7 @@ export default function Testimonials() {
                 <img
                   src={image}
                   alt={name}
-                  className="w-24 h-24 rounded-full object-cover mx-auto mb-4 shadow-md"
+                  className="w-24 h-24 rounded-full object-cover object-top mx-auto mb-4 shadow-md"
                 />
                 <h3 className="font-semibold text-near-black text-lg text-center mb-2">{name}</h3>
                 <p className="text-secondary-gray text-sm leading-relaxed text-center">{qualities}</p>

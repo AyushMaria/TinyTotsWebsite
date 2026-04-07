@@ -27,22 +27,22 @@ export default function Hero() {
         <img
           src="/images/tinytots-image-2.jpg"
           alt="Happy child"
-          className="rounded-2xl object-cover w-full h-64 mt-8 shadow-card"
+          className="rounded-2xl object-cover w-full aspect-[4/3] shadow-card"
         />
         <img
           src="/images/tinytots-image-3.jpg"
           alt="Children playing"
-          className="rounded-2xl object-cover w-full h-64 shadow-card"
+          className="rounded-2xl object-cover w-full aspect-[4/3] shadow-card"
         />
         <img
           src="/images/tinytots-image-4.jpg"
           alt="Learning"
-          className="rounded-2xl object-cover w-full h-48 shadow-card"
+          className="rounded-2xl object-cover w-full aspect-[4/3] shadow-card"
         />
         <img
           src="/images/tinytots-image-5.jpg"
           alt="Care"
-          className="rounded-2xl object-cover w-full h-48 mt-4 shadow-card"
+          className="rounded-2xl object-cover w-full aspect-[4/3] shadow-card"
         />
       </div>
     </section>

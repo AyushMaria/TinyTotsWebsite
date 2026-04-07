@@ -1,12 +1,14 @@
+import { Handshake, Palette, Heart, Smartphone, PartyPopper, Moon, Leaf, Brush } from 'lucide-react';
+
 const experiences = [
-  { emoji: '👋', label: 'Warm Welcome' },
-  { emoji: '🎨', label: 'Playful Learning' },
-  { emoji: '💛', label: 'Emotional Growth' },
-  { emoji: '📱', label: 'Daily Parent Connection' },
-  { emoji: '🎉', label: 'Celebrating Milestones' },
-  { emoji: '🌙', label: 'Comforting Routines' },
-  { emoji: '🥦', label: 'Healthy Habits & Nutrition' },
-  { emoji: '🖍️', label: 'Creative Exploration' },
+  { icon: Handshake, label: 'Warm Welcome' },
+  { icon: Palette, label: 'Playful Learning' },
+  { icon: Heart, label: 'Emotional Growth' },
+  { icon: Smartphone, label: 'Daily Parent Connection' },
+  { icon: PartyPopper, label: 'Celebrating Milestones' },
+  { icon: Moon, label: 'Comforting Routines' },
+  { icon: Leaf, label: 'Healthy Habits & Nutrition' },
+  { icon: Brush, label: 'Creative Exploration' },
 ];
 
 export default function DailyExperience() {
@@ -24,12 +26,12 @@ export default function DailyExperience() {
           </p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {experiences.map(({ emoji, label }) => (
+          {experiences.map(({ icon: Icon, label }) => (
             <div
               key={label}
               className="bg-white rounded-3xl p-6 text-center hover:shadow-md transition-shadow"
             >
-              <span className="text-3xl">{emoji}</span>
+              <Icon size={36} className="text-rausch-red mx-auto" />
               <p className="mt-3 font-medium text-gray-700 text-sm">{label}</p>
             </div>
           ))}
