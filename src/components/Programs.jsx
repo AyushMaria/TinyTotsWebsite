@@ -28,6 +28,7 @@ const programs = [
     desc: 'Our preschool program builds a strong academic and social foundation through structured yet fun activities. Children develop critical thinking, collaboration, and a love of learning.',
     activities: ['Early Literacy', 'STEM Exploration', 'Art & Creativity', 'Group Projects', 'Physical Education'],
     image: '/images/tinytots-image-28.jpg',
+  }
 ];
 
 export default function Programs() {

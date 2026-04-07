@@ -7,12 +7,12 @@ const stats = [
 
 export default function Stats() {
   return (
-    <<sectionsection className="bg-premium-sage mx-6 md:mx-12 lg:mx-24 rounded-4xl py-14 px-8 my-4 text-premium-almond">
-      <<divdiv className="max-w-4xl mx-auto text-center mb-10">
-        <<hh2 className="font-display text-3xl font-bold text-premium-almond">
+    <sectionsection className="bg-premium-sage mx-6 md:mx-12 lg:mx-24 rounded-4xl py-14 px-8 my-4 text-premium-almond">
+      <divdiv className="max-w-4xl mx-auto text-center mb-10">
+        <hh2 className="font-display text-3xl font-bold text-premium-almond">
           Numbers That Tell Our Story
         </h2>
-        <<pp className="text-premium-almond/80 mt-3 max-w-xl mx-auto">
+        <pp className="text-premium-almond/80 mt-3 max-w-xl mx-auto">
           Behind every number is a child's laugh, a parent's peace of mind, and
           a team that truly cares every single day.
         </p>
