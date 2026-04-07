@@ -10,7 +10,7 @@ import Programs from './components/Programs';
 import Testimonials from './components/Testimonials';
 import Gallery from './components/Gallery';
 import BlogPage from './components/BlogPage';
-import VibeAndVolley from './components/VibeAndVolley';
+//import VibeAndVolley from './components/VibeAndVolley';
 import ContactForm from './components/ContactForm';
 import Blog from './components/Blog';
 import CTA from './components/CTA';
@@ -28,7 +28,7 @@ export default function App() {
       <Features /> {/* Our Facilities */}
       <Gallery /> {/* Photo Gallery */}
       <BlogPage /> {/* Blog Page */}
-      <VibeAndVolley /> {/* Vibe & Volley Page */}
+      {/* <VibeAndVolley /> */} {/* Vibe & Volley Page */}
       <ContactForm /> {/* Contact Form */}
       <Footer />
       <CookieConsent />
