@@ -28,6 +28,44 @@
     <meta name="twitter:description" content="A nurturing kindergarten in Chh. Sambhajinagar, Maharashtra, India for children aged 1.5–5 years.">
     <meta name="twitter:image" content="./images/hero.jpg">
 
+    <!-- Schema Markup (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Preschool",
+      "name": "TinyTots Kindergarten",
+      "url": "https://tinytotskindergarten.com",
+      "logo": "https://tinytotskindergarten.com/images/logo.jpg",
+      "image": "https://tinytotskindergarten.com/images/hero.JPG",
+      "description": "A nurturing, play-based early education centre for ages 2–6 in Chh. Sambhajinagar, Maharashtra, India.",
+      "telephone": "+919225560007",
+      "email": "admin@tinytotskindergarten.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Chh. Sambhajinagar",
+        "addressRegion": "Maharashtra",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "19.8725813",
+        "longitude": "75.3177796"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "09:30",
+          "closes": "12:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/TinyTotsAurangabad/",
+        "https://www.instagram.com/tinytotskg/"
+      ]
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -211,15 +249,6 @@
                 </div>
             </div>
 
-
-            <!--<div class="gallery-card">
-                <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/43baa5b871926ee1e597bdbef8f6adeb9db67d9c.jpg"
-                    alt="Toddler Learning" loading="lazy">
-                <div class="gallery-overlay">
-                    <span class="gallery-tag">🧸 Toddler Time</span>
-                </div>
-            </div>-->
-
         </div>
     </section>
 
@@ -343,21 +372,21 @@
                         <div class="contact-icon">📞</div>
                         <div>
                             <strong>Phone</strong>
-                            <span><a href="tel:+919999999999">+91 9225560007</a></span>
+                            <span><a href="tel:+919225560007">+91 9225560007</a></span>
                         </div>
                     </div>
                     <div class="contact-detail-item">
                         <div class="contact-icon">✉️</div>
                         <div>
                             <strong>Email</strong>
-                            <span><a href="mailto:hello@tinytotskindergarten.com">admin@tinytotskindergarten.com</a></span>
+                            <span><a href="mailto:admin@tinytotskindergarten.com">admin@tinytotskindergarten.com</a></span>
                         </div>
                     </div>
                     <div class="contact-detail-item">
                         <div class="contact-icon">🕐</div>
                         <div>
                             <strong>Hours</strong>
-                            <span>Mon – Sat: 09:30 AM – 1:00 PM<br>Sunday: Closed</span>
+                            <span>Mon – Sat: 09:30 AM – 12:00 PM<br>Sunday: Closed</span>
                         </div>
                     </div>
                 </div>
@@ -399,7 +428,7 @@
     <!-- Mobile Sticky CTA -->
     <div class="mobile-cta" id="mobile-cta">
         <a href="#contact">📋 Enroll Your Child Today</a>
-        <a href="tel:+919999999999" class="mobile-cta-call">📞 Call Us</a>
+        <a href="tel:+919225560007" class="mobile-cta-call">📞 Call Us</a>
     </div>
 
     <!-- Footer -->
@@ -420,7 +449,6 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="#mission">Our Mission</a></li>
-                    <!--<li><a href="#programs">Programs</a></li>-->
                     <li><a href="blog.html">Blog</a></li>
                     <li><a href="#contact">Contact Us</a></li>
                 </ul>
@@ -431,9 +459,9 @@
                 <h4>Contact</h4>
                 <ul>
                     <li>📍 Chh. Sambhajinagar, Maharashtra</li>
-                    <li>📞 <a href="tel:+919999999999">+91 9225560007</a></li>
-                    <li>✉️ <a href="mailto:hello@tinytotskindergarten.com">admin@tinytotskindergarten.com</a></li>
-                    <li>🕐 Mon–Sat: 09:30 AM – 1:00 PM</li>
+                    <li>📞 <a href="tel:+919225560007">+91 9225560007</a></li>
+                    <li>✉️ <a href="mailto:admin@tinytotskindergarten.com">admin@tinytotskindergarten.com</a></li>
+                    <li>🕐 Mon–Sat: 09:30 AM – 12:00 PM</li>
                 </ul>
             </div>
 
@@ -483,14 +511,13 @@
             const hamburger = document.getElementById('hamburger');
             const navLinks = document.getElementById('nav-links');
 
-            if (!hamburger || !navLinks) return; // safety guard
+            if (!hamburger || !navLinks) return;
 
             hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('open');
             navLinks.classList.toggle('open');
             });
 
-            // Close menu when a nav link is clicked
             navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('open');
@@ -499,12 +526,11 @@
             });
         });
     
-        // Scroll Reveal
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                revealObserver.unobserve(entry.target); // animate once only
+                revealObserver.unobserve(entry.target);
             }
             });
         }, { threshold: 0.12 });
@@ -513,7 +539,6 @@
             revealObserver.observe(el);
         });
     
-        // Hide mobile CTA when contact section is visible
         const contactSection = document.getElementById('contact');
         const mobileCta = document.getElementById('mobile-cta');
 
@@ -533,7 +558,6 @@
             ctaObserver.observe(contactSection);
         }
 
-        // Contact form submission
         const contactForm = document.getElementById('contact-form');
         contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -579,11 +603,8 @@
             }, 3000);
         });
 
-        // Schedule a Visit ripple
         document.querySelector('.btn-primary').addEventListener('click', function(e) {
         const btn = this;
-
-        // Bounce animation
         btn.style.transform = 'scale(0.95) translateY(3px)';
         setTimeout(() => {
             btn.style.transform = 'scale(1.05) translateY(-2px)';
