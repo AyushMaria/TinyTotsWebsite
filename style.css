@@ -550,6 +550,101 @@ img { display: block; max-width: 100%; height: auto; }
   .testimonials-grid { grid-template-columns: 1fr; }
 }
 
+/* ─── FAQ ────────────────────────────────────────── */
+.faq {
+    padding: 80px 5%;
+    background-color: #fffdfa;
+    text-align: center;
+}
+
+.faq h2 {
+    font-size: 2.5rem;
+    color: #4a6d41;
+    margin: 10px 0 40px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.faq-list {
+    max-width: 750px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+}
+
+.faq-item {
+    background-color: white;
+    border: 2px solid #eef4e8;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-item:hover {
+    border-color: #a8d5ba;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.faq-item[open] {
+    border-color: #a8d5ba;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.faq-question {
+    padding: 20px 24px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #4a6d41;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+}
+
+.faq-question::-webkit-details-marker { display: none; }
+
+.faq-question::after {
+    content: '+';
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #a8d5ba;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.faq-item[open] .faq-question::after {
+    content: '−';
+    color: #4a6d41;
+}
+
+.faq-answer {
+    padding: 0 24px 20px;
+}
+
+.faq-answer p {
+    font-size: 0.97rem;
+    color: #5a5a5a;
+    line-height: 1.75;
+}
+
+.faq-answer a {
+    color: #4a6d41;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.faq-answer a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+    .faq h2 { font-size: 2rem; }
+    .faq-question { font-size: 0.97rem; padding: 16px 18px; }
+    .faq-answer { padding: 0 18px 16px; }
+}
+
 /* ─── Blog ──────────────────────────────────────── */
 .blog { padding: 80px 5%; }
 
