@@ -1,13 +1,592 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nurturing</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinyTots Kindergarten | Where Learning is an Adventure</title>
+    <!-- SEO -->
+    <meta name="description" content="TinyTots Kindergarten – A nurturing, play-based early education centre in Chh. Sambhajinagar, Maharashtra, India. Enrol your child today.">
+    <meta name="keywords" content="kindergarten, Maharashtra, Chh. Sambhajinagar, India, early education, preschool, Aurangabad, TinyTots, play-based learning, best preschool">
+    <meta name="author" content="TinyTots Kindergarten">
+
+    <!-- Open Graph (WhatsApp, Facebook link previews) -->
+    <meta property="og:title" content="TinyTots Kindergarten | Where Learning is an Adventure">
+    <meta property="og:description" content="A warm, safe, and imaginative environment in Chh. Sambhajinagar, Maharashtra where your little ones grow through play, discovery, and friendship.">
+    <meta property="og:image" content="./images/hero.jpg">
+    <meta property="og:url" content="https://tinytotskindergarten.com">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TinyTots Kindergarten">
+    <meta name="twitter:description" content="A nurturing kindergarten in Chh. Sambhajinagar, Maharashtra, India for children aged 1.5–5 years.">
+    <meta name="twitter:image" content="./images/hero.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="./images/logo.jpg">
+</head>
+
+<body>
+
+    <!-- Sticky Navigation -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <img src="./images/logo.jpg" alt="TinyTots Logo" class="nav-logo-img">
+            <span class="nav-brand">TinyTots Kindergarten</span>
+        </div>
+
+        <div class="nav-links" id="nav-links">
+            <a href="#mission">Mission</a>
+            <a href="blog.html">Blog</a>
+            <a href="https://vibevolley.tinytotskindergarten.com/">Vibe & Volley</a>
+            <a href="#contact" class="btn-enroll">Enroll Now</a>
+        </div>
+
+        <!-- Hamburger Button (visible only on mobile) -->
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Nurturing Curious Minds <span class="hero-highlight">Every Day.</span></h1>
+            <p>A warm, safe, and imaginative environment where your little ones grow through play, discovery, and friendship.</p>
+            <a href="#contact" class="btn-primary">Schedule a Visit</a>
+        </div>
+        <div class="hero-img">
+            <img src="./images/hero.JPG"
+                 alt="Teachers and children playing together in a kindergarten classroom"
+                 width="450" height="450" loading="lazy">
+        </div>
+    </section>
+
+    <!-- Wave: hero cream → stats green -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="1440" height="70" fill="#ebf5ee"/>
+            <path d="M0,35 C320,70 720,0 1080,45 C1260,65 1380,30 1440,35 L1440,70 L0,70 Z" fill="#4a6d41"/>
+        </svg>
+    </div>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar reveal">
+        <div class="stat-item">
+            <span class="stat-number">24+</span>
+            <span class="stat-label">Years of Experience</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">500+</span>
+            <span class="stat-label">Happy Families</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">5</span>
+            <span class="stat-label">Learning Groups</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">5+</span>
+            <span class="stat-label">Activities Per Week Per Class</span>
+        </div>
+    </section>
+
+    <!-- Wave: stats green → page cream -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="1440" height="70" fill="#4a6d41"/>
+            <path d="M0,20 C240,65 600,5 960,50 C1200,75 1380,20 1440,30 L1440,70 L0,70 Z" fill="#fffdfa"/>
+        </svg>
+    </div>
+
+    <!-- Our Mission -->
+    <section id="mission" class="mission reveal">
+        <span class="section-label">Our Heart</span>
+        <h2>Our Mission</h2>
+
+        <!-- Quote -->
+        <div class="mission-quote">
+            <p>"Every child is unique, every mind is capable, and every moment is an opportunity to grow."</p>
+            <span>– Principal Manishika Maria</span>
+        </div>
+
+        <!-- Philosophy paragraphs -->
+        <p class="mission-body">
+            At <strong>Tiny Tots Kindergarten</strong>, we believe that early education lays the foundation for a lifetime of learning. Drawing inspiration from <strong>Glenn Doman</strong>, <strong>Jean Piaget</strong> and <strong>Howard Gardner</strong>, we ensure each child experiences a joyful, stimulating, and meaningful learning journey.
+        </p>
+
+        <!-- Curriculum Features chips -->
+        <h3 class="mission-chips-title">📋 Curriculum Features</h3>
+        <div class="mission-cards-grid">
+            <div class="mission-chip">🧠 Brain-body coordination</div>
+            <div class="mission-chip">📖 Early reading & numbers</div>
+            <div class="mission-chip">🎨 Creative arts & music</div>
+            <div class="mission-chip">🤝 Group collaboration</div>
+            <div class="mission-chip">🔍 Inquiry-based learning</div>
+            <div class="mission-chip">🌿 Hands-on exploration</div>
+            <div class="mission-chip">🧩 Puzzle & logic games</div>
+            <div class="mission-chip">📚 Storytelling & rhymes</div>
+            <div class="mission-chip">💃 Movement-based learning</div>
+            <div class="mission-chip">🌟 Multisensory activities</div>
+            <div class="mission-chip">🎭 Skits & presentations</div>
+        </div>
+
+        <!-- Advantages chips -->
+        <h3 class="mission-chips-title">✨ Why TinyTots</h3>
+        <div class="mission-cards-grid">
+            <div class="mission-chip mission-chip--green">🌱 Well-rounded growth</div>
+            <div class="mission-chip mission-chip--green">🎤 Public speaking skills</div>
+            <div class="mission-chip mission-chip--green">💛 Personalised attention</div>
+            <div class="mission-chip mission-chip--green">🔥 Confidence & curiosity</div>
+            <div class="mission-chip mission-chip--green">🤖 AI-powered learning</div>
+            <div class="mission-chip mission-chip--green">🏕️ Seasonal workshops</div>
+            <div class="mission-chip mission-chip--green">🧬 Unique strength discovery</div>
+            <div class="mission-chip mission-chip--green">🚀 Future-ready foundation</div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery -->
+    <section class="gallery reveal">
+        <div class="gallery-header">
+            <span class="section-label">Moments We Cherish</span>
+            <h2>Life at TinyTots</h2>
+            <p>A glimpse into the joy, curiosity, and creativity that fills our classrooms every day.</p>
+        </div>
+
+        <div class="gallery-grid">
+
+            <!-- Large feature card -->
+            <div class="gallery-card gallery-card--large reveal-child">
+                <img src="./images/gallery3.jpg"
+                    alt="Art workshop" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-tag">🖌️ Festival Celebrations</span>
+                </div>
+            </div>
+
+            <!-- Small cards -->
+            <div class="gallery-card reveal-child">
+                <img src="./images/gallery2.jpg"
+                    alt="Art Class" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-tag">🎨 Fun Time</span>
+                </div>
+            </div>
+
+            <div class="gallery-card reveal-child">
+                <img src="./images/gallery8.jpg"
+                    alt="Playground Fun" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-tag">🛝 Playground</span>
+                </div>
+            </div>
+
+            <div class="gallery-card reveal-child">
+                <img src="./images/gallery10.JPG"
+                    alt="Story Time" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-tag">📖 Play Based Learning</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card reveal-child">
+                <img src="./images/gallery9.JPG"
+                    alt="Teachers and children playing" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-tag">🧑‍🏫 Classroom Time</span>
+                </div>
+            </div>
+
+
+            <!--<div class="gallery-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/43baa5b871926ee1e597bdbef8f6adeb9db67d9c.jpg"
+                    alt="Toddler Learning" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-tag">🧸 Toddler Time</span>
+                </div>
+            </div>-->
+
+        </div>
+    </section>
+
+    <!-- Wave: cream → soft green -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="1440" height="70" fill="#fdfbfb"/>
+            <path d="M0,30 C300,70 700,5 1100,45 C1280,65 1380,25 1440,30 L1440,70 L0,70 Z" fill="#f4f9f1"/>
+        </svg>
+    </div>
+
+    <!-- Testimonials -->
+    <section class="testimonials reveal">
+        <span class="section-label">What Parents Say</span>
+        <h2>Happy Families</h2>
+        <p class="testimonials-subtitle">Don't just take our word for it — hear from the families who trust us every day.</p>
+
+        <div class="testimonials-grid">
+
+            <div class="testimonial-card reveal-child">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>"TinyTots has been a blessing for our daughter. She wakes up every morning excited to go to school. The teachers are incredibly patient and the environment is so welcoming!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">S</div>
+                    <div>
+                        <strong>Mrs.Seema Munde</strong>
+                        <span>Parent of Utkarsh, Age 5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card reveal-child">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>"The curriculum here is outstanding. My son has developed so much confidence in just a few months. He loves the nature class and comes home talking about plants every day!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">R</div>
+                    <div>
+                        <strong>Mrs.Megha Hiwrale</strong>
+                        <span>Parent of Anaisha, Age 6</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card reveal-child">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>"We were nervous about our little one starting school so young, but TinyTots made the transition seamless. The staff genuinely cares about each child's unique needs."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">A</div>
+                    <div>
+                        <strong>Mrs.Pallak Agrawal</strong>
+                        <span>Parent of Jiyaan, Age 5</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Wave: soft green → cream -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="1440" height="70" fill="#f4f9f1"/>
+            <path d="M0,40 C400,5 800,65 1200,25 C1340,10 1400,45 1440,40 L1440,70 L0,70 Z" fill="#fffdfa"/>
+        </svg>
+    </div>
+
+
+    <!-- Blog Preview -->
+    <section id="blog" class="blog reveal">
+        <h2>Parenting Tips & News</h2>
+        <div class="blog-grid">
+            <div class="blog-card reveal-child">
+                <img src="./images/blog1.jpg"
+                     alt="5 Fun Home Activities" width="400" height="200" loading="lazy">
+                <div class="blog-card-body">
+                    <h4>when should kids start preschool?</h4>
+                    <p>EOne of the biggest milestones in a child's early years is...</p>
+                    <a href="blog.html">Read More →</a>
+                </div>
+            </div>
+            <div class="blog-card reveal-child">
+                <img src="./images/blog2.jpg"
+                     alt="Healthy Lunch Ideas" width="400" height="200" loading="lazy">
+                <div class="blog-card-body">
+                    <h4>Healthy Lunch Ideas</h4>
+                    <p>Nutritious and colorful meal options that children actually love to eat...</p>
+                    <a href="blog.html">Read More →</a>
+                </div>
+            </div>
+            <div class="blog-card reveal-child">
+                <img src="./images/blog3.jpg"
+                     alt="Emotional Growth" width="400" height="200" loading="lazy">
+                <div class="blog-card-body">
+                    <h4>Emotional Growth</h4>
+                    <p>Helping your child navigate big emotions with simple, positive reinforcement...</p>
+                    <a href="blog.html">Read More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact reveal">
+        <div class="contact-wrapper">
+
+            <!-- Left: Contact Info -->
+            <div class="contact-info">
+                <span class="section-label">Get In Touch</span>
+                <h2>We'd Love to Hear From You</h2>
+                <p>Have questions about admissions or want to schedule a visit? Reach out — we're happy to help!</p>
+
+                <div class="contact-details">
+                    <div class="contact-detail-item">
+                        <div class="contact-icon">📍</div>
+                        <div>
+                            <strong>Address</strong>
+                            <span>TinyTots Kindergarten,<br>Chh. Sambhajinagar,<br>Maharashtra, India</span>
+                        </div>
+                    </div>
+                    <div class="contact-detail-item">
+                        <div class="contact-icon">📞</div>
+                        <div>
+                            <strong>Phone</strong>
+                            <span><a href="tel:+919999999999">+91 9225560007</a></span>
+                        </div>
+                    </div>
+                    <div class="contact-detail-item">
+                        <div class="contact-icon">✉️</div>
+                        <div>
+                            <strong>Email</strong>
+                            <span><a href="mailto:hello@tinytotskindergarten.com">admin@tinytotskindergarten.com</a></span>
+                        </div>
+                    </div>
+                    <div class="contact-detail-item">
+                        <div class="contact-icon">🕐</div>
+                        <div>
+                            <strong>Hours</strong>
+                            <span>Mon – Sat: 09:30 AM – 1:00 PM<br>Sunday: Closed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Form -->
+            <div class="contact-box">
+                <h3>Send Us a Message</h3>
+                <form class="contact-form" id="contact-form">
+                    <div class="form-row">
+                        <input type="text" name="parent_name" placeholder="Parent's Name" required>
+                        <input type="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <input type="tel" name="phone" placeholder="Phone Number">
+                    <input type="text" name="child_info" placeholder="Child's Name & Age">
+                    <textarea name="message" rows="4" placeholder="Tell us about your little one or ask us anything..."></textarea>
+                    <button type="submit" class="btn-submit">Send Message 🚀</button>
+                </form>
+            </div>
+
+        </div>
+
+
+        <!-- Map -->
+        <div class="contact-map">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4675.628180094958!2d75.3177796!3d19.8725813!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdb9868efab971d%3A0xcc9f0dee6afcebb4!2sTiny%20Tots%20Kindergarten!5e1!3m2!1sen!2ssc!4v1775573053694!5m2!1sen!2ssc" 
+                width="600" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile Sticky CTA -->
+    <div class="mobile-cta" id="mobile-cta">
+        <a href="#contact">📋 Enroll Your Child Today</a>
+        <a href="tel:+919999999999" class="mobile-cta-call">📞 Call Us</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer reveal">
+        <div class="footer-inner">
+
+            <!-- Brand -->
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <img src="./images/logo.jpg" alt="TinyTots Logo" class="nav-logo-img">
+                    <span class="nav-brand">Tiny Tots Kindergarten</span>
+                </div>
+                <p>A nurturing, play-based early education centre in Chh. Sambhajinagar, Maharashtra, India.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-links-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#mission">Our Mission</a></li>
+                    <!--<li><a href="#programs">Programs</a></li>-->
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Snippet -->
+            <div class="footer-links-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li>📍 Chh. Sambhajinagar, Maharashtra</li>
+                    <li>📞 <a href="tel:+919999999999">+91 9225560007</a></li>
+                    <li>✉️ <a href="mailto:hello@tinytotskindergarten.com">admin@tinytotskindergarten.com</a></li>
+                    <li>🕐 Mon–Sat: 09:30 AM – 1:00 PM</li>
+                </ul>
+            </div>
+
+            <!-- Social -->
+            <div class="footer-social-col">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/TinyTotsAurangabad/" class="social-icon" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                    </a>
+
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/tinytotskg/" class="social-icon" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                            <circle cx="12" cy="12" r="4"/>
+                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                        </svg>
+                    </a>
+
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/919225560007" class="social-icon social-icon--whatsapp" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.118.553 4.103 1.522 5.827L.057 23.571l5.9-1.448A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.012-1.376l-.36-.214-3.732.916.978-3.63-.234-.373A9.818 9.818 0 1 1 12 21.818z"/>
+                        </svg>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="footer-bottom">
+            <p>© 2026 TinyTots Kindergarten, Chh. Sambhajinagar, Maharashtra. All rights reserved.</p>
+            <p>Designed with ❤️ for happy children.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('nav-links');
+
+            if (!hamburger || !navLinks) return; // safety guard
+
+            hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            navLinks.classList.toggle('open');
+            });
+
+            // Close menu when a nav link is clicked
+            navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('open');
+                navLinks.classList.remove('open');
+            });
+            });
+        });
+    
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target); // animate once only
+            }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.reveal, .reveal-child').forEach(el => {
+            revealObserver.observe(el);
+        });
+    
+        // Hide mobile CTA when contact section is visible
+        const contactSection = document.getElementById('contact');
+        const mobileCta = document.getElementById('mobile-cta');
+
+        const ctaObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                mobileCta.style.opacity = '0';
+                mobileCta.style.pointerEvents = 'none';
+            } else {
+                mobileCta.style.opacity = '1';
+                mobileCta.style.pointerEvents = 'auto';
+            }
+            });
+        }, { threshold: 0.3 });
+
+        if (contactSection && mobileCta) {
+            ctaObserver.observe(contactSection);
+        }
+
+        // Contact form submission
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('.btn-submit');
+            const originalText = btn.textContent;
+            btn.textContent = 'Sending...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('https://formsubmit.co/ajax/admin@tinytotskindergarten.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        _subject: 'New Enquiry from ' + this.parent_name.value.trim(),
+                        parent_name: this.parent_name.value.trim(),
+                        email: this.email.value.trim(),
+                        phone: this.phone.value.trim(),
+                        child_info: this.child_info.value.trim(),
+                        message: this.message.value.trim(),
+                        _template: 'table'
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    btn.textContent = 'Message Sent! ✓';
+                    btn.style.background = '#22c55e';
+                    contactForm.reset();
+                } else {
+                    btn.textContent = 'Failed to send';
+                    btn.style.background = '#ef4444';
+                }
+            } catch (err) {
+                btn.textContent = 'Network error';
+                btn.style.background = '#ef4444';
+            }
+
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+            }, 3000);
+        });
+
+        // Schedule a Visit ripple
+        document.querySelector('.btn-primary').addEventListener('click', function(e) {
+        const btn = this;
+
+        // Bounce animation
+        btn.style.transform = 'scale(0.95) translateY(3px)';
+        setTimeout(() => {
+            btn.style.transform = 'scale(1.05) translateY(-2px)';
+            setTimeout(() => {
+            btn.style.transform = 'scale(1)';
+            }, 150);
+        }, 100);
+        });
+    </script>
+
+</body>
 </html>
