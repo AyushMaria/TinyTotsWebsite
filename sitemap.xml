@@ -1,20 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <!-- Homepage -->
   <url>
     <loc>https://tinytotskindergarten.com/</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-05-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/hero.JPG</image:loc>
+      <image:title>TinyTots Preschool Aurangabad</image:title>
+      <image:caption>Children learning through play at TinyTots preschool in Aurangabad</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/logo.jpg</image:loc>
+      <image:title>TinyTots Kindergarten Logo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/gallery2.jpg</image:loc>
+      <image:title>Creative art class at nursery school in Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/gallery3.jpg</image:loc>
+      <image:title>Outdoor playground activities at Aurangabad preschool</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/gallery8.jpg</image:loc>
+      <image:title>Story time and play-based learning at TinyTots Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/gallery9.JPG</image:loc>
+      <image:title>Teacher with children in classroom at preschool in Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/gallery10.JPG</image:loc>
+      <image:title>Children celebrating festivals at TinyTots preschool in Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog1.jpg</image:loc>
+      <image:title>When Should Kids Start Preschool in Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog2.jpg</image:loc>
+      <image:title>Early Education Tips from TinyTots Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog3.jpg</image:loc>
+      <image:title>Play-Based Learning at TinyTots Preschool Aurangabad</image:title>
+    </image:image>
   </url>
 
   <!-- Blog -->
   <url>
     <loc>https://tinytotskindergarten.com/blog.html</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-05-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/logo.jpg</image:loc>
+      <image:title>TinyTots Kindergarten Logo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog1.jpg</image:loc>
+      <image:title>When Should Kids Start Preschool in Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog2.jpg</image:loc>
+      <image:title>Early Education Tips from TinyTots Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog3.jpg</image:loc>
+      <image:title>Play-Based Learning at TinyTots Preschool Aurangabad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog4.jpg</image:loc>
+      <image:title>Parenting Tips from TinyTots Aurangabad</image:title>
+    </image:image>
   </url>
 
 </urlset>

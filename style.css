@@ -319,38 +319,55 @@ img { display: block; max-width: 100%; height: auto; }
 /* ─── Programs ──────────────────────────────────── */
 .programs {
   padding: 80px 5%;
-  background-color: #fcfcfc;
+  background-color: #fdfbfb;
+  text-align: center;
 }
 
 .programs h2 {
   text-align: center;
   font-size: 2.5rem;
   color: #4a6d41;
-  margin-bottom: 50px;
+  margin-bottom: 14px;
+}
+
+.programs-subtitle {
+  color: #7a7a7a;
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto 50px;
+  line-height: 1.6;
 }
 
 .programs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .program-card {
   background-color: white;
-  padding: 40px;
+  padding: 40px 32px;
   border-radius: 30px;
   text-align: center;
   border: 2px solid #eef4e8;
   box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.program-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.06);
 }
 
 .program-card--yellow { border-color: #fdf5d9; }
 
 .program-card .icon { font-size: 50px; margin-bottom: 20px; }
 
-.program-card h3 { color: #6b8e23; margin-bottom: 15px; font-size: 1.5rem; }
+.program-card h3 { color: #6b8e23; margin-bottom: 15px; font-size: 1.35rem; }
 
-.program-card p { color: #7a7a7a; }
+.program-card p { color: #7a7a7a; font-size: 0.95rem; line-height: 1.7; }
 
 /* ─── Gallery ───────────────────────────────────── */
 .gallery {
