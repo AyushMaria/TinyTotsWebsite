@@ -5,7 +5,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://tinytotskindergarten.com/</loc>
-    <lastmod>2026-05-22</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -51,10 +51,10 @@
     </image:image>
   </url>
 
-  <!-- Blog -->
+  <!-- Blog Index -->
   <url>
     <loc>https://tinytotskindergarten.com/blog.html</loc>
-    <lastmod>2026-05-22</lastmod>
+    <lastmod>2026-06-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -76,6 +76,58 @@
     <image:image>
       <image:loc>https://tinytotskindergarten.com/images/blog4.jpg</image:loc>
       <image:title>Parenting Tips from TinyTots Aurangabad</image:title>
+    </image:image>
+  </url>
+
+  <!-- Blog Post: When Should Kids Start Preschool? -->
+  <url>
+    <loc>https://tinytotskindergarten.com/blog/when-should-kids-start-preschool.html</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog1.jpg</image:loc>
+      <image:title>When Should Kids Start Preschool in Aurangabad</image:title>
+      <image:caption>Age guide for starting preschool — from TinyTots Aurangabad</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Blog Post: Healthy Lunch Ideas -->
+  <url>
+    <loc>https://tinytotskindergarten.com/blog/healthy-lunch-ideas.html</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog2.jpg</image:loc>
+      <image:title>Healthy Lunch Ideas for Preschoolers in Aurangabad</image:title>
+      <image:caption>Nutritious tiffin ideas from TinyTots preschool teachers</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Blog Post: Helping Your Child Navigate Big Emotions -->
+  <url>
+    <loc>https://tinytotskindergarten.com/blog/helping-child-navigate-emotions.html</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog3.jpg</image:loc>
+      <image:title>Helping Children Navigate Big Emotions at Preschool Age</image:title>
+      <image:caption>Emotional growth tips from TinyTots Aurangabad</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Blog Post: 5 Fun Home Activities for Toddlers -->
+  <url>
+    <loc>https://tinytotskindergarten.com/blog/fun-home-activities-toddlers.html</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://tinytotskindergarten.com/images/blog4.jpg</image:loc>
+      <image:title>Fun Home Activities for Toddlers from TinyTots Aurangabad</image:title>
+      <image:caption>Educational toddler activities using everyday materials</image:caption>
     </image:image>
   </url>
 
