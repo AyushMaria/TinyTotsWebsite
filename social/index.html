@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#4a6d41">
+<title>TinyTots Social</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --green: #4a6d41; --green-dark: #3a5733; --green-soft: #ebf5ee; --mint: #a8d5ba;
+    --yellow: #ffde59; --yellow-dark: #e6c84d; --cream: #fffdfa; --ink: #3f3f3f; --muted: #7a8b7a;
+    --line: #e4ece2; --red: #c0392b; --red-soft: #fdecea; --blue-soft: #eaf2fb; --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Quicksand', sans-serif; color: var(--ink); background: var(--cream); line-height: 1.5; }
+  h1, h2, h3 { font-family: 'Nunito', sans-serif; color: var(--green); margin: 0 0 12px; }
+  h2 { font-size: 1.35rem; }
+  h3 { font-size: 1.05rem; }
+  a { color: var(--green); }
+  button, input, select, textarea { font: inherit; }
+  .hidden { display: none !important; }
+  .muted { color: var(--muted); font-size: .9rem; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+
+  header { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; max-width: 980px; margin: 0 auto; }
+  .bar img { height: 36px; }
+  .brand { font-family: 'Nunito'; font-weight: 800; color: var(--green); font-size: 1.1rem; }
+  .who { margin-left: auto; font-size: .85rem; color: var(--muted); text-align: right; }
+  .who button { margin-left: 8px; }
+  nav.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 0 16px 10px; max-width: 980px; margin: 0 auto; scrollbar-width: none; }
+  nav.tabs button { border: 0; background: var(--green-soft); color: var(--green); padding: 8px 14px; border-radius: 999px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+  nav.tabs button.active { background: var(--green); color: #fff; }
+  .count { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 4px; border-radius: 999px; background: var(--yellow); color: #856404; font-size: .75rem; }
+
+  main { padding: 20px 0 60px; }
+  .card { background: #fff; border-radius: var(--radius); box-shadow: 0 6px 20px rgba(0,0,0,.05); padding: 20px; margin-bottom: 18px; }
+  label { display: block; font-weight: 700; margin: 12px 0 6px; font-size: .92rem; }
+  input[type=text], input[type=email], input[type=password], input[type=datetime-local], input[type=time], select, textarea {
+    width: 100%; padding: 11px 13px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink);
+  }
+  textarea { min-height: 90px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--mint); box-shadow: 0 0 0 3px rgba(168,213,186,.35); }
+  .btn { border: 0; border-radius: 999px; padding: 10px 18px; font-weight: 700; cursor: pointer; background: var(--green); color: #fff; }
+  .btn:disabled { opacity: .55; cursor: default; }
+  .btn.yellow { background: var(--yellow); color: #856404; box-shadow: 0 3px 0 var(--yellow-dark); }
+  .btn.ghost { background: var(--green-soft); color: var(--green); }
+  .btn.danger { background: var(--red-soft); color: var(--red); }
+  .btn.small { padding: 6px 12px; font-size: .85rem; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .grow { flex: 1; min-width: 160px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; margin: 14px 0; }
+  .check input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--green); }
+
+  .drop { border: 2px dashed var(--mint); border-radius: var(--radius); padding: 28px 16px; text-align: center; background: var(--green-soft); cursor: pointer; }
+  .drop strong { color: var(--green); font-size: 1.05rem; }
+  .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; margin-top: 12px; }
+  .thumbs img, .thumbs video { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; background: #eee; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; background: var(--green-soft); color: var(--green); }
+  .pill.review { background: #fff6d6; color: #856404; }
+  .pill.scheduled { background: var(--blue-soft); color: #2c5d8f; }
+  .pill.failed, .pill.rejected { background: var(--red-soft); color: var(--red); }
+  .pill.published { background: var(--green); color: #fff; }
+
+  .post { display: grid; grid-template-columns: 220px 1fr; gap: 18px; }
+  .media { display: grid; gap: 6px; grid-template-columns: repeat(2, 1fr); align-content: start; }
+  .media.one { grid-template-columns: 1fr; }
+  .media img, .media video { width: 100%; border-radius: 12px; background: #eee; aspect-ratio: 4/5; object-fit: cover; }
+  .meta { font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
+  .note { background: var(--green-soft); border-radius: 12px; padding: 8px 12px; font-size: .9rem; margin-bottom: 8px; }
+  .err { background: var(--red-soft); color: var(--red); border-radius: 12px; padding: 8px 12px; font-size: .88rem; margin: 8px 0; }
+  .ok { background: var(--green-soft); color: var(--green); border-radius: 12px; padding: 8px 12px; font-size: .9rem; margin: 8px 0; }
+  .list-item { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+  .list-item:first-child { border-top: 0; }
+  .list-item img, .list-item video { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; flex: none; background: #eee; }
+  .list-item .txt { flex: 1; min-width: 0; }
+  #memberList .list-item { flex-wrap: wrap; }
+  #memberList .txt { min-width: 180px; }
+  .list-item .cap { font-size: .88rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .day { font-family: 'Nunito'; color: var(--green); margin: 18px 0 4px; font-size: .95rem; }
+  .slot { display: grid; grid-template-columns: 1fr 130px auto; gap: 8px; margin-bottom: 8px; }
+  .progress { height: 8px; background: var(--green-soft); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+  .progress div { height: 100%; width: 0; background: var(--green); transition: width .3s; }
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: .9rem; z-index: 50; max-width: 90vw; }
+  .center { max-width: 420px; margin: 8vh auto; }
+  .steps { padding-left: 20px; font-size: .92rem; } .steps li { margin-bottom: 6px; }
+  code { background: var(--green-soft); padding: 1px 6px; border-radius: 6px; font-size: .85rem; }
+  @media (max-width: 680px) {
+    .post { grid-template-columns: 1fr; }
+    .slot { grid-template-columns: 1fr 118px 44px; }
+    .card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sign in -->
+<section id="login" class="wrap hidden">
+  <div class="center card">
+    <div class="row" style="margin-bottom:10px"><img src="/images/logo.jpg" alt="TinyTots logo" height="44"><h1 style="margin:0;font-size:1.4rem">TinyTots Social</h1></div>
+    <p class="muted">Upload photos and reels for the school's Instagram. Sign in with the email and password the school gave you.</p>
+    <form id="loginForm">
+      <label for="email">Email</label><input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required>
+      <div id="loginErr" class="err hidden"></div>
+      <p><button class="btn" style="width:100%">Sign in</button></p>
+    </form>
+  </div>
+</section>
+
+<!-- First sign-in: choose a password -->
+<section id="setpw" class="wrap hidden">
+  <div class="center card">
+    <h2>Choose your own password</h2>
+    <p class="muted">You signed in with a temporary password. Pick a new one (at least 10 characters).</p>
+    <form id="pwForm">
+      <label for="pw1">New password</label><input id="pw1" type="password" autocomplete="new-password" minlength="10" required>
+      <label for="pw2">Repeat it</label><input id="pw2" type="password" autocomplete="new-password" minlength="10" required>
+      <div id="pwErr" class="err hidden"></div>
+      <p><button class="btn" style="width:100%">Save password</button></p>
+    </form>
+  </div>
+</section>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <header>
+    <div class="bar">
+      <img src="/images/logo.jpg" alt="TinyTots logo">
+      <span class="brand">TinyTots Social</span>
+      <span class="who"><span id="whoName"></span><button class="btn ghost small" id="signOut">Sign out</button></span>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-tab="upload" class="active">Upload</button>
+      <button data-tab="review" data-owner>Review <span class="count hidden" id="reviewCount"></span></button>
+      <button data-tab="schedule">Schedule</button>
+      <button data-tab="published">Published</button>
+      <button data-tab="mine" data-uploader>My uploads</button>
+      <button data-tab="settings" data-owner>Settings</button>
+      <button data-tab="team" data-owner>Team</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <!-- Upload -->
+    <section data-panel="upload">
+      <div id="setupBanner" class="card hidden" style="border:2px solid var(--yellow)"></div>
+      <div class="card">
+        <h2>Add content</h2>
+        <p class="muted">One video = a Reel. One photo = a photo post. Several photos (up to 10) = a carousel. Each upload becomes one Instagram post.</p>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose photos or a video">
+          <strong>Tap to choose photos or a video</strong><br><span class="muted">or drag files here · JPG, PNG, MP4, MOV · videos up to 50 MB</span>
+        </div>
+        <input type="file" id="fileInput" class="hidden" accept="image/jpeg,image/png,image/webp,image/heic,video/mp4,video/quicktime" multiple>
+        <div id="pickInfo" class="muted" style="margin-top:10px"></div>
+        <div class="thumbs" id="thumbs"></div>
+        <label for="note">What's happening? <span class="muted">(helps the caption — no children's names)</span></label>
+        <textarea id="note" placeholder="e.g. Diwali celebration in the Nursery class — diya painting and rangoli"></textarea>
+        <label class="check"><input type="checkbox" id="consent"> <span>Parents of every child who can be recognised in this content have agreed to it being shared on the school's social media.</span></label>
+        <div id="upErr" class="err hidden"></div>
+        <button class="btn yellow" id="uploadBtn" disabled>Upload &amp; write caption</button>
+        <div class="progress hidden" id="upProg"><div></div></div>
+        <div id="upStatus" class="muted" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <!-- Review (owner) -->
+    <section data-panel="review" class="hidden">
+      <div class="card"><h2>Waiting for your approval</h2>
+        <p class="muted">Check the caption, edit if needed, then approve. Approved posts go into the next free posting slot from Settings, or pick an exact time.</p>
+      </div>
+      <div id="reviewList"></div>
+    </section>
+
+    <!-- Schedule -->
+    <section data-panel="schedule" class="hidden">
+      <div class="card"><h2>Coming up</h2><div id="schedList"></div></div>
+      <div class="card" id="failedCard"><h2>Needs attention</h2><div id="failedList"></div></div>
+    </section>
+
+    <!-- Published -->
+    <section data-panel="published" class="hidden">
+      <div class="card"><h2>Published</h2><div id="pubList"></div></div>
+    </section>
+
+    <!-- My uploads (uploaders) -->
+    <section data-panel="mine" class="hidden">
+      <div class="card"><h2>My uploads</h2><div id="mineList"></div></div>
+    </section>
+
+    <!-- Settings (owner) -->
+    <section data-panel="settings" class="hidden">
+      <div class="card">
+        <h2>Instagram connection</h2>
+        <div id="igStatus"></div>
+        <details id="igHelp">
+          <summary style="cursor:pointer;font-weight:700;color:var(--green)">How to connect (one-time, about 10 minutes)</summary>
+          <ol class="steps">
+            <li>In the Instagram app: <b>Settings → Account type and tools → Switch to professional account</b> (choose Business or Creator). Skip this if it already is one.</li>
+            <li>On a computer, go to <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener">developers.facebook.com/apps</a> and log in with Facebook. Click <b>Create app</b>, choose the <b>Business</b> type, and name it "TinyTots Scheduler".</li>
+            <li>In the app, add the <b>Instagram</b> product and open <b>API setup with Instagram login</b>.</li>
+            <li>Under <b>Generate access tokens</b>, click <b>Add account</b>, log in as @tinytotskg, then click <b>Generate token</b> and copy it.</li>
+            <li>Paste the token below and press <b>Connect</b>. The scheduler renews it automatically.</li>
+          </ol>
+        </details>
+        <label for="igToken">Access token</label>
+        <div class="row"><input id="igToken" type="password" class="grow" placeholder="Paste the token from the Meta app"><button class="btn" id="igConnect">Connect</button></div>
+      </div>
+
+      <div class="card">
+        <h2>Automatic captions</h2>
+        <div id="capStatus"></div>
+      </div>
+
+      <div class="card">
+        <h2>Posting schedule</h2>
+        <p class="muted">Approved posts fill these slots in order (India time). With 4 reels plus photos a month, 3 slots a week works well.</p>
+        <div id="slots"></div>
+        <button class="btn ghost small" id="addSlot">+ Add a slot</button>
+        <label for="guide">Caption style</label>
+        <textarea id="guide" style="min-height:110px"></textarea>
+        <label for="tags">Hashtags to include</label>
+        <textarea id="tags" style="min-height:70px"></textarea>
+        <p><button class="btn" id="saveSettings">Save settings</button></p>
+      </div>
+    </section>
+
+    <!-- Team (owner) -->
+    <section data-panel="team" class="hidden">
+      <div class="card">
+        <h2>Add a person</h2>
+        <p class="muted">Uploaders can add content and see the schedule. Only owners approve and publish.</p>
+        <div class="row">
+          <div class="grow"><label for="mName">Name</label><input id="mName" type="text" placeholder="e.g. Media team – Rahul"></div>
+          <div class="grow"><label for="mEmail">Email</label><input id="mEmail" type="email"></div>
+          <div style="width:150px"><label for="mRole">Role</label><select id="mRole"><option value="uploader">Uploader</option><option value="owner">Owner</option></select></div>
+        </div>
+        <p><button class="btn" id="addMember">Add &amp; create password</button></p>
+        <div id="memberMsg"></div>
+      </div>
+      <div class="card"><h2>Team</h2><div id="memberList"></div></div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const SUPABASE_URL = 'https://gmxcmztnkbztiznwutkf.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_QUlKNcU6bYyYCrfxk8YySQ_CYC3ZKLL';
+const BUCKET = 'social-media';
+const TZ = 'Asia/Kolkata';
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let me = null, settings = null, posts = [], members = [], picked = [];
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isOwner = () => me && me.role === 'owner';
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.remove('hidden'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.add('hidden'), 3500); }
+function show(id) { ['login','setpw','app'].forEach(x => $(x).classList.toggle('hidden', x !== id)); }
+function fmt(ts) { return new Date(ts).toLocaleString('en-IN', { timeZone: TZ, weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }); }
+function dayKey(ts) { return new Date(ts).toLocaleDateString('en-IN', { timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long' }); }
+function toLocalInput(ts) { const d = new Date(ts); const p = n => String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
+const kindLabel = { photo: 'Photo', carousel: 'Carousel', reel: 'Reel' };
+const statusLabel = { captioning: 'Writing caption…', review: 'Waiting for approval', scheduled: 'Scheduled', publishing: 'Publishing…', published: 'Published', failed: 'Failed', rejected: 'Not approved' };
+
+async function api(action, body = {}) {
+  const { data, error } = await sb.functions.invoke('social-api', { body: { action, ...body } });
+  if (error) {
+    let msg = error.message;
+    try { const j = await error.context.json(); msg = j.error || msg; } catch (_) {}
+    throw new Error(msg);
+  }
+  if (data && data.error) throw new Error(data.error);
+  return data;
+}
+
+// ───────── auth ─────────
+$('loginForm').onsubmit = async (e) => {
+  e.preventDefault(); $('loginErr').classList.add('hidden');
+  const { error } = await sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value });
+  if (error) { $('loginErr').textContent = 'Email or password is not right.'; $('loginErr').classList.remove('hidden'); return; }
+  boot();
+};
+$('pwForm').onsubmit = async (e) => {
+  e.preventDefault(); const err = $('pwErr'); err.classList.add('hidden');
+  if ($('pw1').value !== $('pw2').value) { err.textContent = 'The two passwords are different.'; err.classList.remove('hidden'); return; }
+  const { error } = await sb.auth.updateUser({ password: $('pw1').value });
+  if (error) { err.textContent = error.message; err.classList.remove('hidden'); return; }
+  await sb.from('social_members').update({ must_change_password: false }).eq('user_id', me.user_id);
+  toast('Password saved'); boot();
+};
+$('signOut').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return show('login');
+  const { data: m } = await sb.from('social_members').select('*').eq('user_id', session.user.id).maybeSingle();
+  if (!m) { await sb.auth.signOut(); $('loginErr').textContent = 'This account is not on the TinyTots social team. Ask the school to add you.'; $('loginErr').classList.remove('hidden'); return show('login'); }
+  me = m;
+  if (me.must_change_password) return show('setpw');
+  show('app');
+  $('whoName').textContent = `${me.name} · ${me.role === 'owner' ? 'Owner' : 'Uploader'}`;
+  document.querySelectorAll('[data-owner]').forEach(b => b.classList.toggle('hidden', !isOwner()));
+  document.querySelectorAll('[data-uploader]').forEach(b => b.classList.toggle('hidden', isOwner()));
+  await loadAll();
+  if (isOwner()) {
+    const pending = posts.filter(p => p.status === 'review').length;
+    if (pending) openTab('review');
+  }
+  // refresh lists every 30 s, but never while someone is editing a caption or settings
+  setInterval(() => {
+    const tab = document.querySelector('#tabs button.active')?.dataset.tab;
+    if (['review', 'settings', 'team'].includes(tab)) return;
+    loadAll();
+  }, 30000);
+}
+
+// ───────── tabs ─────────
+function openTab(name) {
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('[data-panel]').forEach(p => p.classList.toggle('hidden', p.dataset.panel !== name));
+  render();
+}
+$('tabs').onclick = (e) => { const b = e.target.closest('button'); if (b) openTab(b.dataset.tab); };
+
+// ───────── data ─────────
+async function loadAll() {
+  const [{ data: p }, { data: s }, { data: mem }] = await Promise.all([
+    sb.from('social_posts').select('*').order('created_at', { ascending: false }).limit(300),
+    sb.from('social_settings').select('*').eq('id', 1).single(),
+    sb.from('social_members').select('*').order('created_at'),
+  ]);
+  posts = p || []; settings = s; members = mem || [];
+  await signAll();
+  const n = posts.filter(x => x.status === 'review').length;
+  $('reviewCount').textContent = n; $('reviewCount').classList.toggle('hidden', !n);
+  render();
+}
+const urlCache = {};
+async function signAll() {
+  const need = [];
+  posts.forEach(p => (p.media || []).forEach(m => { const t = thumbPath(m); [m.path, t].forEach(x => { if (x && !urlCache[x]) need.push(x); }); }));
+  const uniq = [...new Set(need)];
+  for (let i = 0; i < uniq.length; i += 100) {
+    const { data } = await sb.storage.from(BUCKET).createSignedUrls(uniq.slice(i, i + 100), 3600);
+    (data || []).forEach(d => { if (d.signedUrl) urlCache[d.path] = d.signedUrl; });
+  }
+}
+const thumbPath = (m) => m.kind === 'video' ? (m.frames && m.frames[0]) : m.path;
+const thumbHtml = (p) => { const m = (p.media || [])[0]; const u = m && urlCache[thumbPath(m)]; return u ? `<img src="${u}" alt="">` : '<img alt="">'; };
+const byName = (id) => (members.find(m => m.user_id === id) || {}).name || 'Someone';
+
+function render() {
+  const active = document.querySelector('#tabs button.active')?.dataset.tab;
+  if (active === 'review') renderReview();
+  if (active === 'schedule') renderSchedule();
+  if (active === 'published') renderPublished();
+  if (active === 'mine') renderMine();
+  if (active === 'settings') renderSettings();
+  if (active === 'team') renderTeam();
+  renderBanner();
+}
+
+function renderBanner() {
+  const b = $('setupBanner');
+  if (!isOwner() || !settings) return b.classList.add('hidden');
+  if (!settings.ig_user_id) {
+    b.innerHTML = `<h3>One step left: connect Instagram</h3><p class="muted" style="margin:0 0 10px">Uploads and captions work now. Posts will publish once Instagram is connected.</p><button class="btn small" onclick="openTab('settings')">Open Settings</button>`;
+    b.classList.remove('hidden');
+  } else b.classList.add('hidden');
+}
+
+// ───────── upload ─────────
+$('drop').onclick = () => $('fileInput').click();
+$('drop').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') $('fileInput').click(); };
+['dragover','dragenter'].forEach(ev => $('drop').addEventListener(ev, e => { e.preventDefault(); $('drop').style.borderColor = 'var(--green)'; }));
+['dragleave','drop'].forEach(ev => $('drop').addEventListener(ev, e => { e.preventDefault(); $('drop').style.borderColor = ''; }));
+$('drop').addEventListener('drop', e => pick([...e.dataTransfer.files]));
+$('fileInput').onchange = (e) => pick([...e.target.files]);
+$('consent').onchange = updateUploadBtn;
+
+function pick(files) {
+  $('upErr').classList.add('hidden');
+  const vids = files.filter(f => f.type.startsWith('video/'));
+  const imgs = files.filter(f => f.type.startsWith('image/'));
+  if (vids.length > 1 || (vids.length && imgs.length)) return fail('Upload one video on its own (a Reel), or photos on their own.');
+  if (imgs.length > 10) return fail('A carousel can have at most 10 photos. Choose 10 or fewer.');
+  if (vids.length && vids[0].size > 50 * 1024 * 1024) return fail('This video is over 50 MB. Ask for a smaller export (1080p, under 50 MB) and try again.');
+  picked = files.slice(0, 10);
+  $('thumbs').innerHTML = picked.map(f => f.type.startsWith('video/')
+    ? `<video src="${URL.createObjectURL(f)}" muted playsinline></video>` : `<img src="${URL.createObjectURL(f)}" alt="">`).join('');
+  const kind = vids.length ? 'Reel' : imgs.length > 1 ? `Carousel of ${imgs.length} photos` : 'Photo post';
+  $('pickInfo').textContent = picked.length ? `This will be: ${kind}` : '';
+  updateUploadBtn();
+  function fail(m) { picked = []; $('thumbs').innerHTML = ''; $('pickInfo').textContent = ''; $('upErr').textContent = m; $('upErr').classList.remove('hidden'); updateUploadBtn(); }
+}
+function updateUploadBtn() { $('uploadBtn').disabled = !(picked.length && $('consent').checked); }
+
+function loadImage(file) {
+  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error(`Could not read ${file.name}. If it's an iPhone HEIC photo, set the camera to "Most Compatible" or share it as JPG.`)); i.src = URL.createObjectURL(file); });
+}
+function canvasJpeg(canvas, q = 0.9) { return new Promise(r => canvas.toBlob(r, 'image/jpeg', q)); }
+// Instagram accepts JPEG only, with an aspect ratio between 4:5 (portrait) and 1.91:1 (landscape)
+async function prepImage(file) {
+  const img = await loadImage(file);
+  let w = img.naturalWidth, h = img.naturalHeight, sx = 0, sy = 0, sw = w, sh = h;
+  const r = w / h;
+  if (r < 0.8) { sh = Math.round(w / 0.8); sy = Math.round((h - sh) / 2); }
+  else if (r > 1.91) { sw = Math.round(h * 1.91); sx = Math.round((w - sw) / 2); }
+  const scale = Math.min(1, 1440 / Math.max(sw, sh));
+  const c = document.createElement('canvas'); c.width = Math.round(sw * scale); c.height = Math.round(sh * scale);
+  c.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, c.width, c.height);
+  return { blob: await canvasJpeg(c), width: c.width, height: c.height };
+}
+function videoInfo(file) {
+  return new Promise((res, rej) => {
+    const v = document.createElement('video'); v.preload = 'metadata'; v.muted = true; v.playsInline = true; v.src = URL.createObjectURL(file);
+    v.onloadedmetadata = () => res(v); v.onerror = () => rej(new Error('Could not read this video. Use an MP4 or MOV file.'));
+  });
+}
+function seek(v, t) { return new Promise(r => { v.onseeked = () => r(); v.currentTime = t; }); }
+async function videoFrames(file) {
+  const v = await videoInfo(file);
+  const d = v.duration || 0;
+  if (d && d < 3) throw new Error('Reels must be at least 3 seconds long.');
+  if (d > 900) throw new Error('Reels can be at most 15 minutes long.');
+  const frames = [];
+  for (const t of [0.15, 0.5, 0.85]) {
+    await seek(v, Math.max(0.1, d * t));
+    const scale = Math.min(1, 720 / Math.max(v.videoWidth, v.videoHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(v.videoWidth * scale); c.height = Math.round(v.videoHeight * scale);
+    c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+    frames.push(await canvasJpeg(c, 0.82));
+  }
+  return { frames, width: v.videoWidth, height: v.videoHeight, duration: d };
+}
+
+$('uploadBtn').onclick = async () => {
+  const btn = $('uploadBtn'); btn.disabled = true; $('upErr').classList.add('hidden');
+  const prog = $('upProg'), bar = prog.firstElementChild; prog.classList.remove('hidden'); bar.style.width = '5%';
+  const status = (t) => $('upStatus').textContent = t;
+  try {
+    const id = crypto.randomUUID();
+    const folder = `uploads/${new Date().toISOString().slice(0, 7)}/${id}`;
+    const media = [];
+    const isVideo = picked[0].type.startsWith('video/');
+    const put = async (path, blob, type) => {
+      const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType: type, upsert: false });
+      if (error) throw new Error('Upload failed: ' + error.message);
+    };
+    if (isVideo) {
+      status('Reading the video…');
+      const info = await videoFrames(picked[0]);
+      const ext = picked[0].type === 'video/quicktime' ? 'mov' : 'mp4';
+      status('Uploading the video… keep this page open');
+      await put(`${folder}/reel.${ext}`, picked[0], picked[0].type); bar.style.width = '75%';
+      const frames = [];
+      for (let i = 0; i < info.frames.length; i++) { const p = `${folder}/frame-${i + 1}.jpg`; await put(p, info.frames[i], 'image/jpeg'); frames.push(p); }
+      media.push({ path: `${folder}/reel.${ext}`, kind: 'video', mime: picked[0].type, width: info.width, height: info.height, duration: Math.round(info.duration), frames });
+    } else {
+      for (let i = 0; i < picked.length; i++) {
+        status(`Preparing photo ${i + 1} of ${picked.length}…`);
+        const im = await prepImage(picked[i]);
+        const p = `${folder}/photo-${i + 1}.jpg`;
+        await put(p, im.blob, 'image/jpeg');
+        media.push({ path: p, kind: 'image', mime: 'image/jpeg', width: im.width, height: im.height });
+        bar.style.width = `${10 + Math.round(70 * (i + 1) / picked.length)}%`;
+      }
+    }
+    const kind = isVideo ? 'reel' : picked.length > 1 ? 'carousel' : 'photo';
+    const { data: row, error } = await sb.from('social_posts').insert({
+      id, created_by: me.user_id, kind, note: $('note').value.trim() || null, media, consent: true, status: 'captioning',
+    }).select().single();
+    if (error) throw new Error(error.message);
+    bar.style.width = '85%'; status('Writing the caption…');
+    try { await api('caption', { post_id: row.id }); } catch (e) { console.warn(e); }
+    bar.style.width = '100%';
+    status(isOwner() ? 'Done! It is waiting in Review.' : 'Done! The school will review it before it goes on Instagram.');
+    picked = []; $('thumbs').innerHTML = ''; $('pickInfo').textContent = ''; $('note').value = ''; $('consent').checked = false; $('fileInput').value = '';
+    await loadAll();
+    if (isOwner()) openTab('review');
+  } catch (e) {
+    $('upErr').textContent = e.message; $('upErr').classList.remove('hidden'); status('');
+  } finally {
+    setTimeout(() => prog.classList.add('hidden'), 1500); updateUploadBtn();
+  }
+};
+
+// ───────── review ─────────
+function mediaHtml(p) {
+  const items = (p.media || []).slice(0, 4).map(m => m.kind === 'video'
+    ? `<video src="${urlCache[m.path] || ''}" poster="${urlCache[thumbPath(m)] || ''}" controls playsinline preload="none"></video>`
+    : `<img src="${urlCache[m.path] || ''}" alt="" loading="lazy">`).join('');
+  const more = (p.media || []).length > 4 ? `<span class="muted">+${p.media.length - 4} more</span>` : '';
+  return `<div class="media ${(p.media || []).length === 1 ? 'one' : ''}">${items}${more}</div>`;
+}
+function renderReview() {
+  const list = posts.filter(p => p.status === 'review' || p.status === 'captioning');
+  $('reviewList').innerHTML = list.length ? list.map(p => `
+    <div class="card" id="r-${p.id}">
+      <div class="post">
+        ${mediaHtml(p)}
+        <div>
+          <div class="meta"><span class="pill ${p.status}">${statusLabel[p.status]}</span> · ${kindLabel[p.kind]} · from ${esc(byName(p.created_by))} · ${fmt(p.created_at)}</div>
+          ${p.note ? `<div class="note">📝 ${esc(p.note)}</div>` : ''}
+          ${p.caption_error ? `<div class="err">${esc(p.caption_error)}</div>` : ''}
+          <label>Caption <span class="muted" id="cc-${p.id}"></span></label>
+          <textarea id="cap-${p.id}" style="min-height:170px" oninput="countCap('${p.id}')">${esc(p.caption || '')}</textarea>
+          ${p.kind !== 'reel' ? `<label>Image description (for blind users)</label><input type="text" id="alt-${p.id}" value="${esc(p.alt_text || '')}">` : ''}
+          <div class="row" style="margin-top:12px">
+            <button class="btn yellow" onclick="approve('${p.id}')">Approve → next slot</button>
+            <button class="btn ghost" onclick="toggleAt('${p.id}')">Pick a time</button>
+            <button class="btn ghost" onclick="recaption('${p.id}', this)">Rewrite caption</button>
+            <button class="btn ghost" onclick="saveCap('${p.id}')">Save</button>
+            <button class="btn danger" onclick="reject('${p.id}')">Don't post</button>
+          </div>
+          <div class="row hidden" id="at-${p.id}" style="margin-top:10px">
+            <input type="datetime-local" id="atv-${p.id}" class="grow">
+            <button class="btn" onclick="approveAt('${p.id}')">Schedule</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('') : '<div class="card"><p class="muted" style="margin:0">Nothing waiting. New uploads will appear here.</p></div>';
+  list.forEach(p => countCap(p.id));
+}
+function countCap(id) {
+  const t = $('cap-' + id); if (!t) return;
+  const tags = (t.value.match(/#[\p{L}\p{N}_]+/gu) || []).length;
+  const el = $('cc-' + id); el.textContent = `· ${t.value.length}/2200 characters · ${tags}/30 hashtags`;
+  el.style.color = (t.value.length > 2200 || tags > 30) ? 'var(--red)' : '';
+}
+async function saveCap(id, quiet) {
+  const cap = $('cap-' + id).value, alt = $('alt-' + id)?.value ?? null;
+  const tags = (cap.match(/#[\p{L}\p{N}_]+/gu) || []).length;
+  if (cap.length > 2200) throw toastErr('Caption is longer than Instagram allows (2,200 characters).');
+  if (tags > 30) throw toastErr('Instagram allows at most 30 hashtags.');
+  const { error } = await sb.from('social_posts').update({ caption: cap, alt_text: alt }).eq('id', id);
+  if (error) throw toastErr(error.message);
+  if (!quiet) toast('Saved');
+}
+function toastErr(m) { toast(m); return new Error(m); }
+async function approve(id) {
+  try {
+    await saveCap(id, true);
+    if (!$('cap-' + id).value.trim() && !confirm('Post without a caption?')) return;
+    const { data, error } = await sb.rpc('social_schedule_post', { p_post: id });
+    if (error) throw toastErr(error.message);
+    toast('Scheduled for ' + fmt(data)); await loadAll();
+  } catch (e) {}
+}
+function toggleAt(id) {
+  const r = $('at-' + id); r.classList.toggle('hidden');
+  const d = new Date(Date.now() + 2 * 3600e3); d.setMinutes(0, 0, 0); $('atv-' + id).value = toLocalInput(d);
+}
+async function approveAt(id) {
+  try {
+    await saveCap(id, true);
+    const v = $('atv-' + id).value; if (!v) return toast('Pick a date and time');
+    const { data, error } = await sb.rpc('social_schedule_post', { p_post: id, p_at: new Date(v).toISOString() });
+    if (error) throw toastErr(error.message);
+    toast('Scheduled for ' + fmt(data)); await loadAll();
+  } catch (e) {}
+}
+async function recaption(id, btn) {
+  btn.disabled = true; btn.textContent = 'Writing…';
+  try { await api('caption', { post_id: id }); toast('New caption written'); } catch (e) { toast(e.message); }
+  await loadAll();
+}
+async function reject(id) {
+  if (!confirm('Mark this as not for posting? It stays in the list so the uploader can see it.')) return;
+  await sb.from('social_posts').update({ status: 'rejected' }).eq('id', id); await loadAll();
+}
+
+// ───────── schedule & published ─────────
+function renderSchedule() {
+  const up = posts.filter(p => ['scheduled','publishing'].includes(p.status)).sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at));
+  let last = '', html = '';
+  for (const p of up) {
+    const k = dayKey(p.scheduled_at);
+    if (k !== last) { html += `<div class="day">${k}</div>`; last = k; }
+    html += `<div class="list-item">${thumbHtml(p)}<div class="txt">
+      <div><b>${new Date(p.scheduled_at).toLocaleTimeString('en-IN', { timeZone: TZ, hour: 'numeric', minute: '2-digit' })}</b> · ${kindLabel[p.kind]} <span class="pill ${p.status}">${statusLabel[p.status]}</span></div>
+      <div class="cap">${esc((p.caption || '').split('\n')[0])}</div>
+      ${isOwner() && p.status === 'scheduled' ? `<div class="row" style="margin-top:6px">
+        <input type="datetime-local" id="mv-${p.id}" value="${toLocalInput(p.scheduled_at)}" style="max-width:220px">
+        <button class="btn small ghost" onclick="moveTo('${p.id}')">Move</button>
+        <button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review</button></div>` : ''}
+    </div></div>`;
+  }
+  $('schedList').innerHTML = html || '<p class="muted" style="margin:0">Nothing scheduled yet.</p>';
+  const failed = posts.filter(p => p.status === 'failed');
+  $('failedCard').classList.toggle('hidden', !failed.length);
+  $('failedList').innerHTML = failed.map(p => `<div class="list-item">${thumbHtml(p)}<div class="txt">
+    <div>${kindLabel[p.kind]} · was due ${p.scheduled_at ? fmt(p.scheduled_at) : ''}</div>
+    <div class="err">${esc(p.error || 'Unknown error')}</div>
+    ${isOwner() ? `<div class="row"><button class="btn small" onclick="retry('${p.id}')">Try again in 10 minutes</button><button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review</button></div>` : ''}
+  </div></div>`).join('');
+}
+async function moveTo(id) {
+  const v = $('mv-' + id).value;
+  const { data, error } = await sb.rpc('social_schedule_post', { p_post: id, p_at: new Date(v).toISOString() });
+  if (error) return toast(error.message);
+  toast('Moved to ' + fmt(data)); loadAll();
+}
+async function unschedule(id) { await sb.from('social_posts').update({ status: 'review', scheduled_at: null, ig_state: {}, error: null }).eq('id', id); loadAll(); }
+async function retry(id) {
+  const { error } = await sb.rpc('social_schedule_post', { p_post: id, p_at: new Date(Date.now() + 6 * 60e3).toISOString() });
+  if (error) return toast(error.message); toast('Will try again shortly'); loadAll();
+}
+function renderPublished() {
+  const list = posts.filter(p => p.status === 'published').sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+  $('pubList').innerHTML = list.length ? list.map(p => `<div class="list-item">${thumbHtml(p)}<div class="txt">
+    <div><b>${fmt(p.published_at)}</b> · ${kindLabel[p.kind]} ${p.ig_permalink ? `· <a href="${esc(p.ig_permalink)}" target="_blank" rel="noopener">View on Instagram</a>` : ''}</div>
+    <div class="cap">${esc((p.caption || '').split('\n')[0])}</div></div></div>`).join('') : '<p class="muted" style="margin:0">Nothing published yet.</p>';
+}
+function renderMine() {
+  const list = posts.filter(p => p.created_by === me.user_id);
+  $('mineList').innerHTML = list.length ? list.map(p => `<div class="list-item">${thumbHtml(p)}<div class="txt">
+    <div>${kindLabel[p.kind]} · ${fmt(p.created_at)} <span class="pill ${p.status}">${statusLabel[p.status]}</span></div>
+    <div class="cap">${p.status === 'scheduled' ? 'Goes live ' + fmt(p.scheduled_at) : esc(p.note || '')}</div></div></div>`).join('') : '<p class="muted" style="margin:0">You have not uploaded anything yet.</p>';
+}
+
+// ───────── settings ─────────
+let slotDraft = null;
+async function renderSettings() {
+  if (!settings) return;
+  if (!slotDraft) {
+    slotDraft = JSON.parse(JSON.stringify(settings.slots || []));
+    $('guide').value = settings.caption_guidelines || ''; $('tags').value = settings.hashtags || '';
+  }
+  drawSlots();
+  try {
+    const st = await api('status');
+    $('igStatus').innerHTML = st.instagram
+      ? `<div class="ok">Connected to <b>@${esc(st.instagram.username)}</b>. Access renews automatically${st.instagram.expires_at ? ` (current one valid until ${new Date(st.instagram.expires_at).toLocaleDateString('en-IN', { timeZone: TZ, day: 'numeric', month: 'short', year: 'numeric' })})` : ''}.</div>
+         <button class="btn small danger" onclick="igDisconnect()">Disconnect</button>`
+      : `<div class="err">Not connected yet. Follow the steps below once.</div>`;
+    $('igHelp').open = !st.instagram;
+    $('capStatus').innerHTML = st.caption_key
+      ? `<div class="ok">On. Captions are written automatically for every upload.</div>`
+      : `<div class="err">Off. Uploads still work, but captions must be written by hand until the caption key is added in Supabase (Edge Functions → Secrets → <code>ANTHROPIC_API_KEY</code>).</div>`;
+  } catch (e) { $('igStatus').innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+function drawSlots() {
+  $('slots').innerHTML = slotDraft.map((s, i) => `<div class="slot">
+    <select onchange="slotDraft[${i}].dow=+this.value">${DAYS.map((d, j) => `<option value="${j}" ${j === s.dow ? 'selected' : ''}>${d}</option>`).join('')}</select>
+    <input type="time" value="${s.time}" onchange="slotDraft[${i}].time=this.value">
+    <button class="btn small danger" aria-label="Remove slot" title="Remove" onclick="slotDraft.splice(${i},1);drawSlots()">✕</button></div>`).join('') || '<p class="muted">No slots. Add at least one.</p>';
+}
+$('addSlot').onclick = () => { slotDraft.push({ dow: 1, time: '18:00' }); drawSlots(); };
+$('saveSettings').onclick = async () => {
+  const slots = slotDraft.filter(s => /^\d\d:\d\d$/.test(s.time)).sort((a, b) => a.dow - b.dow || a.time.localeCompare(b.time));
+  const { error } = await sb.from('social_settings').update({ slots, caption_guidelines: $('guide').value.trim(), hashtags: $('tags').value.trim() }).eq('id', 1);
+  if (error) return toast(error.message);
+  slotDraft = null; toast('Settings saved'); loadAll();
+};
+$('igConnect').onclick = async () => {
+  const btn = $('igConnect'); btn.disabled = true; btn.textContent = 'Checking…';
+  try { const r = await api('connect_instagram', { token: $('igToken').value }); $('igToken').value = ''; toast(`Connected to @${r.username}`); await loadAll(); }
+  catch (e) { toast(e.message); }
+  btn.disabled = false; btn.textContent = 'Connect';
+};
+async function igDisconnect() { if (!confirm('Disconnect Instagram? Scheduled posts will wait until you reconnect.')) return; await api('disconnect_instagram'); loadAll(); }
+
+// ───────── team ─────────
+function tempPassword() {
+  const a = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'; const b = new Uint32Array(12); crypto.getRandomValues(b);
+  return [...b].map(x => a[x % a.length]).join('');
+}
+function renderTeam() {
+  $('memberList').innerHTML = members.map(m => `<div class="list-item"><div class="txt">
+    <div><b>${esc(m.name)}</b> · ${m.role === 'owner' ? 'Owner' : 'Uploader'}${m.must_change_password ? ' · <span class="muted">hasn\'t signed in yet</span>' : ''}</div>
+    <div class="muted">${esc(m.email)}</div></div>
+    ${m.user_id !== me.user_id ? `<div class="row" style="flex:none"><button class="btn small ghost" onclick="resetPw('${m.user_id}','${esc(m.name)}')">New password</button>
+    <button class="btn small danger" onclick="removeMember('${m.user_id}','${esc(m.name)}')">Remove</button></div>` : '<span class="muted">You</span>'}</div>`).join('');
+}
+function shareBox(name, email, pw) {
+  const msg = `Hi ${name}, here is your TinyTots Social login:\n${location.origin}/social/\nEmail: ${email}\nTemporary password: ${pw}\nYou'll choose your own password when you first sign in.`;
+  $('memberMsg').innerHTML = `<div class="ok"><b>Send these details to ${esc(name)}</b> (shown only once):<br><textarea readonly style="min-height:110px;margin-top:8px">${esc(msg)}</textarea>
+    <div class="row" style="margin-top:8px"><button class="btn small" id="cpy">Copy</button><a class="btn small ghost" style="text-decoration:none" target="_blank" href="https://wa.me/?text=${encodeURIComponent(msg)}">Send on WhatsApp</a></div></div>`;
+  $('cpy').onclick = () => navigator.clipboard.writeText(msg).then(() => toast('Copied'));
+}
+$('addMember').onclick = async () => {
+  const name = $('mName').value.trim(), email = $('mEmail').value.trim(), role = $('mRole').value, pw = tempPassword();
+  try { await api('create_member', { name, email, role, password: pw }); shareBox(name, email, pw); $('mName').value = ''; $('mEmail').value = ''; loadAll(); }
+  catch (e) { $('memberMsg').innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+};
+async function resetPw(id, name) {
+  if (!confirm(`Create a new temporary password for ${name}?`)) return;
+  const pw = tempPassword(); const m = members.find(x => x.user_id === id);
+  try { await api('reset_password', { user_id: id, password: pw }); openTab('team'); shareBox(name, m.email, pw); } catch (e) { toast(e.message); }
+}
+async function removeMember(id, name) {
+  if (!confirm(`Remove ${name} from the team? They won't be able to sign in here.`)) return;
+  try { await api('remove_member', { user_id: id }); loadAll(); } catch (e) { toast(e.message); }
+}
+
+boot();
+</script>
+</body>
+</html>

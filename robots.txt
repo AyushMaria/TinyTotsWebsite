@@ -4,6 +4,7 @@ Disallow: /node_modules/
 Disallow: /server.js
 Disallow: /package.json
 Disallow: /package-lock.json
+Disallow: /social/
 
 # Sitemap
 Sitemap: https://www.tinytotskindergarten.com/sitemap.xml
