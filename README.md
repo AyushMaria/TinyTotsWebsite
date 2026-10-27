@@ -2,7 +2,7 @@
 
 > The official website for **TinyTots Kindergarten**, a nurturing, play-based early education centre in Chh. Sambhajinagar (Aurangabad), Maharashtra, India.
 
-🌐 **Live Site:** [tinytotskindergarten.com](https://tinytotskindergarten.com)
+🌐 **Live Site:** [tinytotskindergarten.com](https://www.tinytotskindergarten.com)
 
 ---
 
@@ -76,7 +76,7 @@ The site is deployed via **[Vercel](https://vercel.com)** with automatic deploym
 
 | Branch | Environment | URL |
 |---|---|---|
-| `master` | Production | [tinytotskindergarten.com](https://tinytotskindergarten.com) |
+| `master` | Production | [tinytotskindergarten.com](https://www.tinytotskindergarten.com) |
 
 ---
 
@@ -107,7 +107,7 @@ Chh. Sambhajinagar, Maharashtra — 431005
 
 ## 🔗 Links
 
-- 🌐 Website: [tinytotskindergarten.com](https://tinytotskindergarten.com)
+- 🌐 Website: [tinytotskindergarten.com](https://www.tinytotskindergarten.com)
 - 📘 Facebook: [TinyTotsAurangabad](https://www.facebook.com/TinyTotsAurangabad/)
 - 📸 Instagram: [@tinytotskg](https://www.instagram.com/tinytotskg/)
 - 🎾 Vibe & Volley: [vibevolley.tinytotskindergarten.com](https://vibevolley.tinytotskindergarten.com/)

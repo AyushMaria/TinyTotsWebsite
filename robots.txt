@@ -6,7 +6,7 @@ Disallow: /package.json
 Disallow: /package-lock.json
 
 # Sitemap
-Sitemap: https://tinytotskindergarten.com/sitemap.xml
+Sitemap: https://www.tinytotskindergarten.com/sitemap.xml
 
 # Crawl-delay (seconds)
 Crawl-delay: 1
