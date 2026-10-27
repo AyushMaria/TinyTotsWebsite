@@ -47,7 +47,7 @@ Testimonials exist (`index.html:423-467`) but no rating schema. Add `aggregateRa
   "reviewCount": "3"
 }
 ```
-Only do this if ratings are real (Google penalises fake). This unlocks star ratings in SERPs — massive CTR boost.
+**Update (Oct 2026): do not do this.** Google does not show star ratings for reviews a business publishes about itself on its own site ("self-serving reviews"). Collect reviews on the Google Business Profile instead — those stars appear in Maps and local results.
 
 ## Step 7 — Create a Google Business Profile + link it
 `README.md` lists Facebook and Instagram but no Google Business Profile (GBP) link in `sameAs` (`index.html:80-83`).

@@ -689,7 +689,9 @@ img { display: block; max-width: 100%; height: auto; }
 
 .blog-card-body { padding: 25px; }
 
-.blog-card-body h4 { margin: 0 0 10px; color: #4a6d41; font-size: 1.3rem; }
+.blog-card-body h3, .blog-card-body h4 { margin: 0 0 10px; color: #4a6d41; font-size: 1.3rem; }
+.blog-all-link { text-align: center; margin-top: 28px; font-weight: 700; }
+.blog-all-link a { color: #4a6d41; }
 
 .blog-card-body p { color: #7a7a7a; font-size: 0.95rem; margin-bottom: 20px; }
 
