@@ -22,7 +22,7 @@ Media is passed as 6-hour signed URLs, so the bucket never has to be public.
 The token is refreshed automatically when it has less than 20 days left.
 
 Captions: `social-api` sends the photos (or 3 frames from a reel) plus the uploader's note to the
-Claude API (`claude-sonnet-5-5`). Needs the Supabase Edge Function secret `ANTHROPIC_API_KEY`.
+Claude API (`claude-haiku-5-5`). Needs the Supabase Edge Function secret `ANTHROPIC_API_KEY`.
 
 All row-level security is enforced by membership in `social_members`; accounts that exist in the
 project for the booking app cannot see or change anything here.

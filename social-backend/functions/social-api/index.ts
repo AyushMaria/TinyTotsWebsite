@@ -9,7 +9,7 @@
 import { encodeBase64 } from "jsr:@std/encoding@1/base64";
 import { admin, BUCKET, cors, getSecret, graphGet, json, setSecret } from "../_shared/common.ts";
 
-const MODEL = "claude-sonnet-5-5";
+const MODEL = "claude-haiku-5-5";
 
 const SCHOOL = `TinyTots Kindergarten is a warm, play-based preschool on Adalat Road in Aurangabad
 (Chhatrapati Sambhajinagar), Maharashtra, India, with 24+ years of experience. Programs: Playgroup (2-3 yrs),
