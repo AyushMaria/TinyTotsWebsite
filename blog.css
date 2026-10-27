@@ -113,3 +113,25 @@
         padding: 24px 18px 32px;
     }
 }
+/* ─── Photo credit & related posts (blog-agent) ───── */
+.photo-credit {
+    margin: 0;
+    padding: 8px 40px 0;
+    font-size: 0.78rem;
+    color: #7a8b7a;
+}
+.photo-credit a { color: #7a8b7a; text-decoration: underline; }
+.blog-related {
+    margin-top: 36px;
+    padding: 24px 28px;
+    border-radius: 20px;
+    background: #f4f9f1;
+}
+.blog-related h3 { margin-top: 0; }
+.blog-related ul { margin: 0; padding-left: 20px; }
+.blog-related li { margin: 6px 0; }
+.blog-related a { color: #4a6d41; font-weight: 700; }
+@media (max-width: 600px) {
+    .photo-credit { padding: 8px 20px 0; }
+    .blog-related { padding: 20px; }
+}
