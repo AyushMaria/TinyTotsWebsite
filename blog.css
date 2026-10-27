@@ -135,3 +135,9 @@
     .photo-credit { padding: 8px 20px 0; }
     .blog-related { padding: 20px; }
 }
+
+/* ─── Links and lists inside posts ─────────────────── */
+.blog-post-content a { color: #4a6d41; font-weight: 700; }
+.blog-post-content ul,
+.blog-post-content ol { margin: 0 0 18px; padding-left: 22px; }
+.blog-post-content li { margin-bottom: 8px; line-height: 1.7; color: #5a5a5a; }
