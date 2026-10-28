@@ -142,9 +142,13 @@ async function caption(db: ReturnType<typeof admin>, postId: string, me: { user_
 
   const userText = `This is ${kind}. Current month: ${month}.\nStaff note: ${post.note?.trim() || "(none)"}\n\nRecent captions to avoid repeating:\n${(recent || []).map((r) => "- " + (r.caption || "").slice(0, 140).replace(/\n/g, " ")).join("\n") || "(none yet)"}`;
 
+  const headers: Record<string, string> = { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" };
+  // Organisation-level keys must name the workspace to use; workspace-scoped keys don't need this.
+  const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
+  if (workspace) headers["anthropic-workspace-id"] = workspace.trim();
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+    headers,
     body: JSON.stringify({
       model: MODEL,
       max_tokens: 900,
