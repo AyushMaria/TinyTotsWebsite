@@ -92,10 +92,54 @@
   .center { max-width: 420px; margin: 8vh auto; }
   .steps { padding-left: 20px; font-size: .92rem; } .steps li { margin-bottom: 6px; }
   code { background: var(--green-soft); padding: 1px 6px; border-radius: 6px; font-size: .85rem; }
+
+  .cal-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .cal-head h2 { margin: 0 auto 0 4px; order: -1; flex: 1; }
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .8rem; color: var(--muted); margin-bottom: 10px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .dot.scheduled, .ev.scheduled, .ev.publishing { background: var(--blue-soft); }
+  .dot.scheduled { background: #7fa9d6; } .dot.published { background: var(--green); } .dot.failed { background: var(--red); }
+  .dot.slot { border: 1.5px dashed var(--mint); background: transparent; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .cal-dow div { text-align: center; font-size: .75rem; font-weight: 700; color: var(--muted); padding: 2px 0; }
+  .cal-day { min-height: 96px; border: 1px solid var(--line); border-radius: 10px; padding: 4px; background: #fff; cursor: pointer; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .cal-day.other { background: #fafaf7; opacity: .55; }
+  .cal-day.past { background: #fcfcfa; }
+  .cal-day.today { border: 2px solid var(--green); }
+  .cal-day.sel { box-shadow: 0 0 0 3px var(--mint); }
+  .cal-day.drop { background: var(--green-soft); border-color: var(--green); }
+  .cal-num { font-size: .78rem; font-weight: 700; color: var(--muted); }
+  .cal-day.today .cal-num { color: var(--green); }
+  .ev { display: flex; align-items: center; gap: 4px; border-radius: 7px; padding: 2px 4px 2px 2px; font-size: .72rem; font-weight: 700; color: var(--ink); overflow: hidden; white-space: nowrap; border: 0; width: 100%; text-align: left; cursor: pointer; font-family: inherit; }
+  .ev img { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; flex: none; background: #eee; }
+  .ev span { overflow: hidden; text-overflow: ellipsis; }
+  .ev.scheduled, .ev.publishing { color: #2c5d8f; }
+  .ev .kind { font-weight: 700; }
+  .ev.published { background: var(--green-soft); color: var(--green); }
+  .ev.failed { background: var(--red-soft); color: var(--red); }
+  .ev[draggable=true] { cursor: grab; }
+  .slot-mark { font-size: .68rem; color: var(--muted); border: 1.5px dashed var(--mint); border-radius: 7px; padding: 1px 4px; white-space: nowrap; overflow: hidden; }
+  .detail { display: grid; grid-template-columns: 180px 1fr; gap: 16px; }
+  .detail-cap { white-space: pre-wrap; font-size: .9rem; background: var(--green-soft); border-radius: 12px; padding: 10px 12px; max-height: 220px; overflow: auto; }
+  .day-list .ev { padding: 6px; font-size: .88rem; margin-bottom: 6px; }
+  .day-list .ev img { width: 44px; height: 44px; border-radius: 8px; }
   @media (max-width: 680px) {
     .post { grid-template-columns: 1fr; }
     .slot { grid-template-columns: 1fr 118px 44px; }
     .card { padding: 16px; }
+    .cal-card { padding: 12px 8px; }
+    .cal-grid { gap: 2px; }
+    .cal-day { min-height: 64px; padding: 3px 2px; border-radius: 8px; }
+    .ev { padding: 2px; flex-direction: column; gap: 1px; }
+    .ev span { font-size: .6rem; line-height: 1.1; }
+    .slot-mark { display: none; }
+    .cal-grid .ev .kind { display: none; }
+    .ev img { width: 100%; height: auto; aspect-ratio: 1; }
+    .day-list .ev { flex-direction: row; }
+    .day-list .ev span { font-size: .85rem; }
+    .day-list .ev img { width: 44px; }
+    .cal-day .more { font-size: .65rem; }
+    .detail { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -181,8 +225,23 @@
 
     <!-- Schedule -->
     <section data-panel="schedule" class="hidden">
-      <div class="card"><h2>Coming up</h2><div id="schedList"></div></div>
       <div class="card" id="failedCard"><h2>Needs attention</h2><div id="failedList"></div></div>
+      <div class="card cal-card">
+        <div class="cal-head">
+          <button class="btn ghost small" id="calPrev" aria-label="Previous month">‹</button>
+          <h2 id="calTitle"></h2>
+          <button class="btn ghost small" id="calNext" aria-label="Next month">›</button>
+          <button class="btn ghost small" id="calToday">Today</button>
+        </div>
+        <div class="cal-legend">
+          <span><i class="dot scheduled"></i>Scheduled</span><span><i class="dot published"></i>Published</span>
+          <span><i class="dot failed"></i>Failed</span><span><i class="dot slot"></i>Free slot</span>
+          <span class="muted" id="calHint"></span>
+        </div>
+        <div class="cal-grid cal-dow"><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div></div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+      <div class="card hidden" id="calDetail"></div>
     </section>
 
     <!-- Published -->
@@ -320,6 +379,7 @@ async function boot() {
   setInterval(() => {
     const tab = document.querySelector('#tabs button.active')?.dataset.tab;
     if (['review', 'settings', 'team'].includes(tab)) return;
+    if (document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
     loadAll();
   }, 30000);
 }
@@ -581,22 +641,51 @@ async function reject(id) {
 }
 
 // ───────── schedule & published ─────────
+// ───────── schedule: month calendar (India time) ─────────
+const IST_FMT = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+function istParts(ts) { const o = {}; IST_FMT.formatToParts(new Date(ts)).forEach(x => o[x.type] = x.value); return { date: `${o.year}-${o.month}-${o.day}`, time: `${o.hour}:${o.minute}` }; }
+const todayIST = () => istParts(Date.now()).date;
+const ymd = (y, m, d) => `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+const t12 = (hhmm) => { let [h, m] = hhmm.split(':').map(Number); const ap = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12; return m ? `${h}:${String(m).padStart(2, '0')}${ap}` : `${h}${ap}`; };
+let calMonth = null, calSel = null, calOpen = null;
+
+function postWhen(p) { return p.status === 'published' ? p.published_at : p.scheduled_at; }
+function calendarPosts() {
+  return posts.filter(p => ['scheduled', 'publishing', 'published', 'failed'].includes(p.status) && postWhen(p));
+}
 function renderSchedule() {
-  const up = posts.filter(p => ['scheduled','publishing'].includes(p.status)).sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at));
-  let last = '', html = '';
-  for (const p of up) {
-    const k = dayKey(p.scheduled_at);
-    if (k !== last) { html += `<div class="day">${k}</div>`; last = k; }
-    html += `<div class="list-item">${thumbHtml(p)}<div class="txt">
-      <div><b>${new Date(p.scheduled_at).toLocaleTimeString('en-IN', { timeZone: TZ, hour: 'numeric', minute: '2-digit' })}</b> · ${kindLabel[p.kind]} <span class="pill ${p.status}">${statusLabel[p.status]}</span></div>
-      <div class="cap">${esc((p.caption || '').split('\n')[0])}</div>
-      ${isOwner() && p.status === 'scheduled' ? `<div class="row" style="margin-top:6px">
-        <input type="datetime-local" id="mv-${p.id}" value="${toLocalInput(p.scheduled_at)}" style="max-width:220px">
-        <button class="btn small ghost" onclick="moveTo('${p.id}')">Move</button>
-        <button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review</button></div>` : ''}
-    </div></div>`;
+  if (!calMonth) { const t = todayIST(); calMonth = { y: +t.slice(0, 4), m: +t.slice(5, 7) }; }
+  const { y, m } = calMonth;
+  $('calTitle').textContent = new Date(y, m - 1, 1).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+  const touch = window.matchMedia('(pointer: coarse)').matches;
+  $('calHint').textContent = isOwner() ? (touch ? 'Tap a post to see it or move it' : 'Drag a scheduled post to another day to move it · click a day for details') : 'Tap a day to see details';
+
+  const byDay = {};
+  for (const p of calendarPosts()) { const k = istParts(postWhen(p)).date; (byDay[k] = byDay[k] || []).push(p); }
+  Object.values(byDay).forEach(list => list.sort((a, b) => new Date(postWhen(a)) - new Date(postWhen(b))));
+
+  const first = new Date(Date.UTC(y, m - 1, 1));
+  const lead = (first.getUTCDay() + 6) % 7;                 // Monday-first
+  const start = new Date(Date.UTC(y, m - 1, 1 - lead));
+  const today = todayIST();
+  const slots = (settings && settings.slots) || [];
+  const cells = [];
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(start.getTime() + i * 86400e3);
+    const key = ymd(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+    if (i >= 35 && d.getUTCMonth() !== m - 1) break;       // drop an all-next-month last row
+    const list = byDay[key] || [];
+    const cls = ['cal-day', d.getUTCMonth() !== m - 1 ? 'other' : '', key < today ? 'past' : '', key === today ? 'today' : '', key === calSel ? 'sel' : ''].join(' ');
+    const shown = list.slice(0, 3).map(p => evHtml(p)).join('');
+    const more = list.length > 3 ? `<span class="muted more">+${list.length - 3} more</span>` : '';
+    const taken = new Set(list.filter(p => p.status !== 'published').map(p => istParts(p.scheduled_at).time));
+    const free = key >= today ? slots.filter(s => s.dow === d.getUTCDay() && !taken.has(s.time)).map(s => `<span class="slot-mark">${t12(s.time)} free</span>`).join('') : '';
+    cells.push(`<div class="${cls}" data-day="${key}" onclick="pickDay('${key}')"><span class="cal-num">${d.getUTCDate()}</span>${shown}${more}${free}</div>`);
   }
-  $('schedList').innerHTML = html || '<p class="muted" style="margin:0">Nothing scheduled yet.</p>';
+  $('calGrid').innerHTML = cells.join('');
+  wireDrag();
+  renderDetail(byDay);
+
   const failed = posts.filter(p => p.status === 'failed');
   $('failedCard').classList.toggle('hidden', !failed.length);
   $('failedList').innerHTML = failed.map(p => `<div class="list-item">${thumbHtml(p)}<div class="txt">
@@ -605,13 +694,73 @@ function renderSchedule() {
     ${isOwner() ? `<div class="row"><button class="btn small" onclick="retry('${p.id}')">Try again in 10 minutes</button><button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review</button></div>` : ''}
   </div></div>`).join('');
 }
+function evHtml(p) {
+  const m = (p.media || [])[0]; const u = m && urlCache[thumbPath(m)];
+  const drag = isOwner() && p.status === 'scheduled' ? 'true' : 'false';
+  return `<button class="ev ${p.status}" draggable="${drag}" data-id="${p.id}" title="${esc(kindLabel[p.kind] + ' · ' + statusLabel[p.status])}"
+    onclick="event.stopPropagation();openPost('${p.id}')">${u ? `<img src="${u}" alt="">` : '<img alt="">'}<span>${t12(istParts(postWhen(p)).time)}<b class="kind"> ${kindLabel[p.kind]}</b></span></button>`;
+}
+function pickDay(key) { calSel = key; calOpen = null; renderSchedule(); $('calDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+function openPost(id) { const p = posts.find(x => x.id === id); if (!p) return; calSel = istParts(postWhen(p)).date; calOpen = id; renderSchedule(); $('calDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+function renderDetail(byDay) {
+  const box = $('calDetail');
+  if (!calSel) return box.classList.add('hidden');
+  box.classList.remove('hidden');
+  const label = new Date(calSel + 'T12:00:00+05:30').toLocaleDateString('en-IN', { timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long' });
+  const list = byDay[calSel] || [];
+  const p = calOpen && posts.find(x => x.id === calOpen);
+  if (!p) {
+    box.innerHTML = `<div class="row" style="justify-content:space-between"><h2 style="margin:0">${label}</h2><button class="btn ghost small" onclick="calSel=null;renderSchedule()">Close</button></div>
+      <div class="day-list" style="margin-top:12px">${list.length ? list.map(evHtml).join('') : '<p class="muted" style="margin:0">Nothing on this day.</p>'}</div>`;
+    return;
+  }
+  const when = postWhen(p);
+  const actions = isOwner() && p.status === 'scheduled' ? `
+    <label for="mv-${p.id}">Move to</label>
+    <div class="row"><input type="datetime-local" id="mv-${p.id}" value="${toLocalInput(p.scheduled_at)}" class="grow">
+      <button class="btn small" onclick="moveTo('${p.id}')">Move</button></div>
+    <div class="row" style="margin-top:10px"><button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review (edit caption)</button></div>` : '';
+  const failed = p.status === 'failed' ? `<div class="err">${esc(p.error || 'Unknown error')}</div>${isOwner() ? `<div class="row"><button class="btn small" onclick="retry('${p.id}')">Try again in 10 minutes</button><button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review</button></div>` : ''}` : '';
+  box.innerHTML = `<div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">${label}</h2>
+      <div class="row"><button class="btn ghost small" onclick="calOpen=null;renderSchedule()">All posts this day</button><button class="btn ghost small" onclick="calSel=null;calOpen=null;renderSchedule()">Close</button></div></div>
+    <div class="detail">${mediaHtml(p)}<div>
+      <div class="meta"><span class="pill ${p.status}">${statusLabel[p.status]}</span> · ${kindLabel[p.kind]} · ${fmt(when)} · from ${esc(byName(p.created_by))}</div>
+      ${p.ig_permalink ? `<p style="margin:6px 0"><a href="${esc(p.ig_permalink)}" target="_blank" rel="noopener">View on Instagram →</a></p>` : ''}
+      <div class="detail-cap">${esc(p.caption || '(no caption)')}</div>
+      ${failed}${actions}
+    </div></div>`;
+}
+function wireDrag() {
+  if (!isOwner()) return;
+  document.querySelectorAll('#calGrid .ev[draggable=true]').forEach(el => {
+    el.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', el.dataset.id); e.dataTransfer.effectAllowed = 'move'; });
+  });
+  document.querySelectorAll('#calGrid .cal-day').forEach(day => {
+    day.addEventListener('dragover', e => { if (day.dataset.day >= todayIST()) { e.preventDefault(); day.classList.add('drop'); } });
+    day.addEventListener('dragleave', () => day.classList.remove('drop'));
+    day.addEventListener('drop', async e => {
+      e.preventDefault(); day.classList.remove('drop');
+      const id = e.dataTransfer.getData('text/plain'); const p = posts.find(x => x.id === id);
+      if (!p || p.status !== 'scheduled') return;
+      const target = day.dataset.day;
+      if (target === istParts(p.scheduled_at).date) return;
+      const at = new Date(`${target}T${istParts(p.scheduled_at).time}:00+05:30`).toISOString();
+      const { data, error } = await sb.rpc('social_schedule_post', { p_post: id, p_at: at });
+      if (error) return toast(error.message);
+      toast('Moved to ' + fmt(data)); calSel = target; calOpen = id; loadAll();
+    });
+  });
+}
+$('calPrev').onclick = () => { calMonth.m--; if (calMonth.m < 1) { calMonth.m = 12; calMonth.y--; } renderSchedule(); };
+$('calNext').onclick = () => { calMonth.m++; if (calMonth.m > 12) { calMonth.m = 1; calMonth.y++; } renderSchedule(); };
+$('calToday').onclick = () => { calMonth = null; calSel = todayIST(); calOpen = null; renderSchedule(); };
 async function moveTo(id) {
   const v = $('mv-' + id).value;
   const { data, error } = await sb.rpc('social_schedule_post', { p_post: id, p_at: new Date(v).toISOString() });
   if (error) return toast(error.message);
-  toast('Moved to ' + fmt(data)); loadAll();
+  calSel = istParts(data).date; calOpen = id; toast('Moved to ' + fmt(data)); loadAll();
 }
-async function unschedule(id) { await sb.from('social_posts').update({ status: 'review', scheduled_at: null, ig_state: {}, error: null }).eq('id', id); loadAll(); }
+async function unschedule(id) { calOpen = null; await sb.from('social_posts').update({ status: 'review', scheduled_at: null, ig_state: {}, error: null }).eq('id', id); loadAll(); }
 async function retry(id) {
   const { error } = await sb.rpc('social_schedule_post', { p_post: id, p_at: new Date(Date.now() + 6 * 60e3).toISOString() });
   if (error) return toast(error.message); toast('Will try again shortly'); loadAll();
