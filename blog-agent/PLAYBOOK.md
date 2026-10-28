@@ -1,7 +1,7 @@
 # TinyTots Blog Agent — Playbook
 
 This folder lets an automated agent publish one new parenting post to
-www.tinytotskindergarten.com every two weeks, in the same look and voice as the
+www.tinytotskindergarten.com every week (Mondays), in the same look and voice as the
 existing posts. Pushing to `master` deploys the site on Vercel automatically.
 
 Files:
