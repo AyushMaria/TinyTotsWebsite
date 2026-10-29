@@ -100,6 +100,16 @@
   .dot.scheduled, .ev.scheduled, .ev.publishing { background: var(--blue-soft); }
   .dot.scheduled { background: #7fa9d6; } .dot.published { background: var(--green); } .dot.failed { background: var(--red); }
   .dot.slot { border: 1.5px dashed var(--mint); background: transparent; }
+  .dot.planned { border: 1.5px dashed #7fa9d6; background: transparent; box-sizing: border-box; }
+  .ev.review, .ev.captioning { background: transparent; color: #2c5d8f; outline: 1.5px dashed #7fa9d6; outline-offset: -1.5px; }
+  .cal-import-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .cal-import-list li { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 12px; background: var(--green-soft); }
+  .cal-import-list li.skip { opacity: .55; }
+  .cal-import-list img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex: none; }
+  .cal-import-list .t { flex: 1; min-width: 0; }
+  .cal-import-list .t b { display: block; }
+  .cal-import-list .t span { font-size: .82rem; color: var(--muted); }
+  .planned { margin: 6px 0; font-weight: 700; color: #2c5d8f; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
   .cal-dow div { text-align: center; font-size: .75rem; font-weight: 700; color: var(--muted); padding: 2px 0; }
   .cal-day { min-height: 96px; border: 1px solid var(--line); border-radius: 10px; padding: 4px; background: #fff; cursor: pointer; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
@@ -213,6 +223,13 @@
         <div class="progress hidden" id="upProg"><div></div></div>
         <div id="upStatus" class="muted" style="margin-top:8px"></div>
       </div>
+      <div class="card hidden" data-owner id="importCard">
+        <h2>Import a content calendar</h2>
+        <p class="muted">Add a whole month of planned posts at once from a calendar file (.json) prepared by Claude. Each post is uploaded with its photos, gets a caption written from its topic, and waits in Review with its planned date. Approving it schedules it for that date.</p>
+        <input type="file" id="calFile" class="hidden" accept=".json,application/json">
+        <button class="btn" id="calPick" type="button">Choose calendar file</button>
+        <div id="calPreview"></div>
+      </div>
     </section>
 
     <!-- Review (owner) -->
@@ -235,7 +252,7 @@
         </div>
         <div class="cal-legend">
           <span><i class="dot scheduled"></i>Scheduled</span><span><i class="dot published"></i>Published</span>
-          <span><i class="dot failed"></i>Failed</span><span><i class="dot slot"></i>Free slot</span>
+          <span><i class="dot failed"></i>Failed</span><span><i class="dot planned"></i>Planned, awaiting approval</span><span><i class="dot slot"></i>Free slot</span>
           <span class="muted" id="calHint"></span>
         </div>
         <div class="cal-grid cal-dow"><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div></div>
@@ -555,6 +572,99 @@ $('uploadBtn').onclick = async () => {
   }
 };
 
+// ───────── content calendar import (owner) ─────────
+// A calendar file holds planned posts: date, topic note and ready-cropped photos.
+// Each becomes a normal post (status Review) with scheduled_at set to its planned time;
+// nothing publishes until the owner approves it. Importing the same file twice skips
+// posts that are already here (their ids are derived from the file and post keys).
+let calPack = null, calBusy = false;
+$('calPick').onclick = () => $('calFile').click();
+$('calFile').onchange = async (e) => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  try {
+    const pack = JSON.parse(await f.text());
+    if (pack.type !== 'tinytots-social-calendar' || !Array.isArray(pack.posts)) throw new Error('This is not a TinyTots calendar file.');
+    calPack = pack; await renderCalPreview();
+  } catch (err) { toast(err.message && !err.message.startsWith('Unexpected') ? err.message : 'Could not read that file.'); }
+};
+async function calPostId(pack, post) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${pack.id}:${post.key}`));
+  const h = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-4${h.slice(13, 16)}-${(8 + (parseInt(h[16], 16) & 3)).toString(16)}${h.slice(17, 20)}-${h.slice(20, 32)}`;
+}
+// Planned time on the post's date: the first posting slot that day that isn't taken,
+// otherwise 10am, 5pm or 7pm (India time).
+function calPlannedAt(date, extraTaken) {
+  const dow = new Date(`${date}T12:00:00+05:30`).getUTCDay();
+  const taken = new Set(posts.filter(p => p.scheduled_at && !['rejected', 'published'].includes(p.status) && istParts(p.scheduled_at).date === date).map(p => istParts(p.scheduled_at).time));
+  (extraTaken[date] || []).forEach(t => taken.add(t));
+  const slotTimes = ((settings && settings.slots) || []).filter(x => x.dow === dow).map(x => x.time).sort();
+  const time = [...slotTimes, '10:00', '17:00', '19:00'].find(t => !taken.has(t)) || '20:00';
+  (extraTaken[date] = extraTaken[date] || []).push(time);
+  return new Date(`${date}T${time}:00+05:30`).toISOString();
+}
+const b64Blob = (b64, type) => { const bin = atob(b64); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type }); };
+async function renderCalPreview() {
+  const pack = calPack, today = todayIST(), extra = {};
+  const rows = [];
+  for (const post of pack.posts) {
+    const id = await calPostId(pack, post);
+    const exists = posts.some(p => p.id === id);
+    const past = post.date <= today;
+    const at = exists || past ? null : calPlannedAt(post.date, extra);
+    rows.push({ post, id, exists, past, at });
+  }
+  calPack._rows = rows;
+  const todo = rows.filter(r => r.at);
+  $('calPreview').innerHTML = `
+    <p style="margin:14px 0 4px"><b>${esc(pack.name || 'Content calendar')}</b> · ${pack.posts.length} posts · ${todo.length} to import</p>
+    <ul class="cal-import-list">${rows.map(r => `<li class="${r.at ? '' : 'skip'}">
+      <img src="data:image/jpeg;base64,${r.post.photos[0].data}" alt="">
+      <div class="t"><b>${esc(r.post.title)}</b><span>${r.at ? fmt(r.at) : r.exists ? 'Already imported' : 'Date has passed: skipped'} · ${kindLabel[r.post.kind]} · ${r.post.photos.length} photo${r.post.photos.length === 1 ? '' : 's'}</span></div>
+    </li>`).join('')}</ul>
+    ${todo.length ? `<label class="check" style="margin-top:14px"><input type="checkbox" id="calConsent"> <span>Parents of every child who can be recognised in these photos have agreed to them being shared on the school's social media.</span></label>
+    <button class="btn yellow" id="calGo" type="button">Import ${todo.length} post${todo.length === 1 ? '' : 's'}</button>
+    <div class="progress hidden" id="calProg"><div></div></div><div id="calStatus" class="muted" style="margin-top:8px"></div>` : '<p class="muted">Nothing left to import from this file.</p>'}`;
+  if (todo.length) $('calGo').onclick = importCalendar;
+}
+async function importCalendar() {
+  if (calBusy) return;
+  if (!$('calConsent').checked) return toast('Please confirm parents have agreed first.');
+  calBusy = true; $('calGo').disabled = true;
+  const todo = calPack._rows.filter(r => r.at);
+  const bar = $('calProg').firstElementChild; $('calProg').classList.remove('hidden');
+  const say = (t) => { $('calStatus').textContent = t; };
+  let done = 0, failed = 0;
+  for (const r of todo) {
+    const n = done + failed + 1;
+    try {
+      const folder = `uploads/${new Date().toISOString().slice(0, 7)}/${r.id}`;
+      const media = [];
+      for (let i = 0; i < r.post.photos.length; i++) {
+        say(`Post ${n} of ${todo.length}: ${r.post.title} · uploading photo ${i + 1} of ${r.post.photos.length}`);
+        const ph = r.post.photos[i]; const path = `${folder}/photo-${i + 1}.jpg`;
+        const { error } = await sb.storage.from(BUCKET).upload(path, b64Blob(ph.data, 'image/jpeg'), { contentType: 'image/jpeg', upsert: true });
+        if (error) throw new Error('Upload failed: ' + error.message);
+        media.push({ path, kind: 'image', mime: 'image/jpeg', width: ph.w, height: ph.h });
+      }
+      const note = `Content calendar topic: ${r.post.title}. ${r.post.note || ''}`.trim();
+      const { error } = await sb.from('social_posts').insert({ id: r.id, created_by: me.user_id, kind: r.post.photos.length > 1 ? 'carousel' : 'photo', note, media, consent: true, status: 'captioning' });
+      if (error) throw new Error(error.message);
+      const { error: e2 } = await sb.from('social_posts').update({ scheduled_at: r.at }).eq('id', r.id);
+      if (e2) console.warn('planned date not saved', e2);
+      say(`Post ${n} of ${todo.length}: ${r.post.title} · writing the caption…`);
+      try { await api('caption', { post_id: r.id }); } catch (e) { console.warn(e); }
+      done++;
+    } catch (e) { failed++; console.warn(r.post.title, e); toast(`${r.post.title}: ${e.message}`); }
+    bar.style.width = `${Math.round(100 * (done + failed) / todo.length)}%`;
+  }
+  calBusy = false;
+  await loadAll(); await renderCalPreview();
+  toast(`Imported ${done} post${done === 1 ? '' : 's'}${failed ? `, ${failed} failed (choose the file again to retry)` : ''}. They are waiting in Review.`);
+  if (done) openTab('review');
+}
+
 // ───────── review ─────────
 function mediaHtml(p) {
   const items = (p.media || []).slice(0, 4).map(m => m.kind === 'video'
@@ -564,20 +674,25 @@ function mediaHtml(p) {
   return `<div class="media ${(p.media || []).length === 1 ? 'one' : ''}">${items}${more}</div>`;
 }
 function renderReview() {
-  const list = posts.filter(p => p.status === 'review' || p.status === 'captioning');
+  // planned (calendar) posts first, earliest date first; then everything else, newest first
+  const list = posts.filter(p => p.status === 'review' || p.status === 'captioning')
+    .sort((a, b) => (a.scheduled_at ? 0 : 1) - (b.scheduled_at ? 0 : 1) || (a.scheduled_at && b.scheduled_at ? new Date(a.scheduled_at) - new Date(b.scheduled_at) : 0));
   $('reviewList').innerHTML = list.length ? list.map(p => `
     <div class="card" id="r-${p.id}">
       <div class="post">
         ${mediaHtml(p)}
         <div>
           <div class="meta"><span class="pill ${p.status}">${statusLabel[p.status]}</span> · ${kindLabel[p.kind]} · from ${esc(byName(p.created_by))} · ${fmt(p.created_at)}</div>
+          ${p.scheduled_at ? `<div class="planned">📅 Planned for ${fmt(p.scheduled_at)}${new Date(p.scheduled_at) < Date.now() ? ' (date has passed: pick a new time)' : ''}</div>` : ''}
           ${p.note ? `<div class="note">📝 ${esc(p.note)}</div>` : ''}
           ${p.caption_error ? `<div class="err">${esc(p.caption_error)}</div>` : ''}
           <label>Caption <span class="muted" id="cc-${p.id}"></span></label>
           <textarea id="cap-${p.id}" style="min-height:170px" oninput="countCap('${p.id}')">${esc(p.caption || '')}</textarea>
           ${p.kind !== 'reel' ? `<label>Image description (for blind users)</label><input type="text" id="alt-${p.id}" value="${esc(p.alt_text || '')}">` : ''}
           <div class="row" style="margin-top:12px">
-            <button class="btn yellow" onclick="approve('${p.id}')">Approve → next slot</button>
+            ${p.scheduled_at && new Date(p.scheduled_at) > Date.now() + 5 * 60e3
+              ? `<button class="btn yellow" onclick="approvePlanned('${p.id}')">Approve for ${fmt(p.scheduled_at)}</button><button class="btn ghost" onclick="approve('${p.id}')">Next free slot instead</button>`
+              : `<button class="btn yellow" onclick="approve('${p.id}')">Approve → next slot</button>`}
             <button class="btn ghost" onclick="toggleAt('${p.id}')">Pick a time</button>
             <button class="btn ghost" onclick="recaption('${p.id}', this)">Rewrite caption</button>
             <button class="btn ghost" onclick="saveCap('${p.id}')">Save</button>
@@ -617,6 +732,16 @@ async function approve(id) {
     toast('Scheduled for ' + fmt(data)); await loadAll();
   } catch (e) {}
 }
+async function approvePlanned(id) {
+  try {
+    await saveCap(id, true);
+    if (!$('cap-' + id).value.trim() && !confirm('Post without a caption?')) return;
+    const p = posts.find(x => x.id === id);
+    const { data, error } = await sb.rpc('social_schedule_post', { p_post: id, p_at: p.scheduled_at });
+    if (error) throw toastErr(error.message);
+    toast('Scheduled for ' + fmt(data)); await loadAll();
+  } catch (e) {}
+}
 function toggleAt(id) {
   const r = $('at-' + id); r.classList.toggle('hidden');
   const d = new Date(Date.now() + 2 * 3600e3); d.setMinutes(0, 0, 0); $('atv-' + id).value = toLocalInput(d);
@@ -651,7 +776,7 @@ let calMonth = null, calSel = null, calOpen = null;
 
 function postWhen(p) { return p.status === 'published' ? p.published_at : p.scheduled_at; }
 function calendarPosts() {
-  return posts.filter(p => ['scheduled', 'publishing', 'published', 'failed'].includes(p.status) && postWhen(p));
+  return posts.filter(p => ['scheduled', 'publishing', 'published', 'failed', 'review', 'captioning'].includes(p.status) && postWhen(p));
 }
 function renderSchedule() {
   if (!calMonth) { const t = todayIST(); calMonth = { y: +t.slice(0, 4), m: +t.slice(5, 7) }; }
@@ -720,6 +845,7 @@ function renderDetail(byDay) {
     <div class="row"><input type="datetime-local" id="mv-${p.id}" value="${toLocalInput(p.scheduled_at)}" class="grow">
       <button class="btn small" onclick="moveTo('${p.id}')">Move</button></div>
     <div class="row" style="margin-top:10px"><button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review (edit caption)</button></div>` : '';
+  const planned = isOwner() && (p.status === 'review' || p.status === 'captioning') ? `<div class="row" style="margin-top:10px"><button class="btn small yellow" onclick="openTab('review')">Review and approve</button></div>` : '';
   const failed = p.status === 'failed' ? `<div class="err">${esc(p.error || 'Unknown error')}</div>${isOwner() ? `<div class="row"><button class="btn small" onclick="retry('${p.id}')">Try again in 10 minutes</button><button class="btn small ghost" onclick="unschedule('${p.id}')">Back to review</button></div>` : ''}` : '';
   box.innerHTML = `<div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">${label}</h2>
       <div class="row"><button class="btn ghost small" onclick="calOpen=null;renderSchedule()">All posts this day</button><button class="btn ghost small" onclick="calSel=null;calOpen=null;renderSchedule()">Close</button></div></div>
@@ -727,7 +853,7 @@ function renderDetail(byDay) {
       <div class="meta"><span class="pill ${p.status}">${statusLabel[p.status]}</span> · ${kindLabel[p.kind]} · ${fmt(when)} · from ${esc(byName(p.created_by))}</div>
       ${p.ig_permalink ? `<p style="margin:6px 0"><a href="${esc(p.ig_permalink)}" target="_blank" rel="noopener">View on Instagram →</a></p>` : ''}
       <div class="detail-cap">${esc(p.caption || '(no caption)')}</div>
-      ${failed}${actions}
+      ${failed}${actions}${planned}
     </div></div>`;
 }
 function wireDrag() {
