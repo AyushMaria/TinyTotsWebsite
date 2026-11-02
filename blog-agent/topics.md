@@ -6,7 +6,7 @@ When published, tick it: `- [x] … — <slug>, <date>`. Add new ideas at the bo
 Admissions season (Nov–Mar) topics come first so they are indexed while parents are deciding.
 
 - [x] Playgroup vs Nursery vs Jr KG vs Sr KG: what is the difference? — season: any — playgroup-nursery-jr-kg-sr-kg-difference, 2026-10-27
-- [ ] How to choose the right preschool in Aurangabad: a parent's checklist — season: Oct–Mar
+- [x] How to choose the right preschool in Aurangabad: a parent's checklist — season: Oct–Mar — how-to-choose-preschool-aurangabad, 2026-11-02
 - [ ] Questions to ask when you visit a preschool — season: Nov–Apr
 - [ ] Preparing your child for the first day of preschool (and handling separation anxiety) — season: Mar–Jun
 - [ ] Winter care for toddlers: clothing, food and colds — season: Nov–Jan
