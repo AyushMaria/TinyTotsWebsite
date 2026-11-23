@@ -12,7 +12,7 @@ Admissions season (Nov–Mar) topics come first so they are indexed while parent
 - [x] Winter care for toddlers: clothing, food and colds — season: Nov–Jan — winter-care-toddlers-aurangabad, 2026-11-09
 - [ ] Makar Sankranti with little ones: til-gul, kites and safe fun — season: Dec–Jan
 - [x] Screen time for toddlers and preschoolers: what the guidelines say — season: any — screen-time-toddlers-preschoolers, 2026-11-16
-- [ ] Building a calm bedtime routine for preschoolers — season: any
+- [x] Building a calm bedtime routine for preschoolers — season: any — calm-bedtime-routine-preschoolers, 2026-11-23
 - [ ] Fine motor activities that get hands ready for writing — season: any
 - [ ] Raising a bilingual child: Marathi, Hindi and English at home — season: any
 - [ ] Reading aloud to preschoolers: why it matters and how to start — season: any

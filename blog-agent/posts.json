@@ -194,5 +194,36 @@
       "fun-home-activities-toddlers",
       "helping-child-navigate-emotions"
     ]
+  },
+  {
+    "slug": "calm-bedtime-routine-preschoolers",
+    "date": "2026-11-23",
+    "title": "Building a Calm Bedtime Routine for Preschoolers",
+    "description": "How much sleep preschoolers need and a simple bedtime routine that helps them settle, with gentle tips for families in Aurangabad from TinyTots.",
+    "listing_text": "How much sleep do little ones really need, and how do you get them to bed without a daily struggle? A simple wind-down routine, screen-free evenings and gentle ways to handle stalling.",
+    "card_title": "A calm bedtime routine",
+    "card_text": "How much sleep preschoolers need and a simple wind-down routine for calmer nights at home.",
+    "read_more": "Read: A calm bedtime routine",
+    "image": {
+      "src": "https://images.unsplash.com/photo-1758874961220-38296d64a674?ixid=M3wxMDE3MjIwfDB8MXxzZWFyY2h8NXx8YmVkdGltZSUyMHN0b3J5JTIwY2hpbGR8ZW58MXwwfHx8MTc5NTQwNTIyM3wy&ixlib=rb-4.1.0",
+      "width": 3840,
+      "height": 2160,
+      "alt": "Mother and young daughter reading a bedtime story together in bed",
+      "credit_name": "Vitaly Gariev",
+      "credit_username": "silverkblack",
+      "unsplash_id": "xKRrjOORL6E"
+    },
+    "modified": "2026-11-23",
+    "keywords": [
+      "bedtime routine for preschoolers",
+      "how much sleep does a 3 year old need",
+      "toddler sleep tips",
+      "child not sleeping at night",
+      "preschool Aurangabad"
+    ],
+    "related": [
+      "screen-time-toddlers-preschoolers",
+      "helping-child-navigate-emotions"
+    ]
   }
 ]
