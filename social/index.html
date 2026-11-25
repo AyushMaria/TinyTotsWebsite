@@ -225,7 +225,7 @@
       </div>
       <div class="card hidden" data-owner id="importCard">
         <h2>Import a content calendar</h2>
-        <p class="muted">Add a whole month of planned posts at once from a calendar file (.json) prepared by Claude. Each post is uploaded with its photos, gets a caption written from its topic, and waits in Review with its planned date. Approving it schedules it for that date.</p>
+        <p class="muted">Add a whole month of planned posts at once from a calendar file (.json) prepared by Claude. Each post is uploaded with its photos or reel, gets its caption (from the file, or written from its topic), and waits in Review with its planned date. Approving it schedules it for that date.</p>
         <input type="file" id="calFile" class="hidden" accept=".json,application/json">
         <button class="btn" id="calPick" type="button">Choose calendar file</button>
         <div id="calPreview"></div>
@@ -595,12 +595,12 @@ async function calPostId(pack, post) {
 }
 // Planned time on the post's date: the first posting slot that day that isn't taken,
 // otherwise 10am, 5pm or 7pm (India time).
-function calPlannedAt(date, extraTaken) {
+function calPlannedAt(date, extraTaken, wanted) {
   const dow = new Date(`${date}T12:00:00+05:30`).getUTCDay();
   const taken = new Set(posts.filter(p => p.scheduled_at && !['rejected', 'published'].includes(p.status) && istParts(p.scheduled_at).date === date).map(p => istParts(p.scheduled_at).time));
   (extraTaken[date] || []).forEach(t => taken.add(t));
   const slotTimes = ((settings && settings.slots) || []).filter(x => x.dow === dow).map(x => x.time).sort();
-  const time = [...slotTimes, '10:00', '17:00', '19:00'].find(t => !taken.has(t)) || '20:00';
+  const time = [...(wanted ? [wanted] : []), ...slotTimes, '10:00', '17:00', '19:00'].find(t => !taken.has(t)) || '20:00';
   (extraTaken[date] = extraTaken[date] || []).push(time);
   return new Date(`${date}T${time}:00+05:30`).toISOString();
 }
@@ -611,8 +611,9 @@ async function renderCalPreview() {
   for (const post of pack.posts) {
     const id = await calPostId(pack, post);
     const exists = posts.some(p => p.id === id);
-    const past = post.date <= today;
-    const at = exists || past ? null : calPlannedAt(post.date, extra);
+    // a post with its own time can go later today; otherwise the date must be in the future
+    const past = post.time ? new Date(`${post.date}T${post.time}:00+05:30`) < Date.now() + 15 * 60e3 : post.date <= today;
+    const at = exists || past ? null : calPlannedAt(post.date, extra, post.time);
     rows.push({ post, id, exists, past, at });
   }
   calPack._rows = rows;
@@ -620,10 +621,10 @@ async function renderCalPreview() {
   $('calPreview').innerHTML = `
     <p style="margin:14px 0 4px"><b>${esc(pack.name || 'Content calendar')}</b> · ${pack.posts.length} posts · ${todo.length} to import</p>
     <ul class="cal-import-list">${rows.map(r => `<li class="${r.at ? '' : 'skip'}">
-      <img src="data:image/jpeg;base64,${r.post.photos[0].data}" alt="">
-      <div class="t"><b>${esc(r.post.title)}</b><span>${r.at ? fmt(r.at) : r.exists ? 'Already imported' : 'Date has passed: skipped'} · ${kindLabel[r.post.kind]} · ${r.post.photos.length} photo${r.post.photos.length === 1 ? '' : 's'}</span></div>
+      <img src="data:image/jpeg;base64,${r.post.video ? r.post.video.frames[0].data : r.post.photos[0].data}" alt="">
+      <div class="t"><b>${esc(r.post.title)}</b><span>${r.at ? fmt(r.at) : r.exists ? 'Already imported' : 'Time has passed: skipped'} · ${kindLabel[r.post.kind]} · ${r.post.video ? `${Math.round(r.post.video.duration)} s` : `${r.post.photos.length} photo${r.post.photos.length === 1 ? '' : 's'}`}${r.post.caption ? ' · caption included' : ''}</span></div>
     </li>`).join('')}</ul>
-    ${todo.length ? `<label class="check" style="margin-top:14px"><input type="checkbox" id="calConsent"> <span>Parents of every child who can be recognised in these photos have agreed to them being shared on the school's social media.</span></label>
+    ${todo.length ? `<label class="check" style="margin-top:14px"><input type="checkbox" id="calConsent"> <span>Parents of every child who can be recognised in these photos and videos have agreed to them being shared on the school's social media.</span></label>
     <button class="btn yellow" id="calGo" type="button">Import ${todo.length} post${todo.length === 1 ? '' : 's'}</button>
     <div class="progress hidden" id="calProg"><div></div></div><div id="calStatus" class="muted" style="margin-top:8px"></div>` : '<p class="muted">Nothing left to import from this file.</p>'}`;
   if (todo.length) $('calGo').onclick = importCalendar;
@@ -641,7 +642,19 @@ async function importCalendar() {
     try {
       const folder = `uploads/${new Date().toISOString().slice(0, 7)}/${r.id}`;
       const media = [];
-      for (let i = 0; i < r.post.photos.length; i++) {
+      const put = async (path, blob, type) => {
+        const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType: type, upsert: true });
+        if (error) throw new Error('Upload failed: ' + error.message);
+      };
+      if (r.post.video) {
+        const v = r.post.video, ext = v.mime === 'video/quicktime' ? 'mov' : 'mp4';
+        say(`Post ${n} of ${todo.length}: ${r.post.title} · uploading the reel… keep this page open`);
+        await put(`${folder}/reel.${ext}`, b64Blob(v.data, v.mime), v.mime);
+        const frames = [];
+        for (let i = 0; i < v.frames.length; i++) { const fp = `${folder}/frame-${i + 1}.jpg`; await put(fp, b64Blob(v.frames[i].data, 'image/jpeg'), 'image/jpeg'); frames.push(fp); }
+        media.push({ path: `${folder}/reel.${ext}`, kind: 'video', mime: v.mime, width: v.w, height: v.h, duration: Math.round(v.duration), frames });
+      }
+      for (let i = 0; i < (r.post.photos || []).length; i++) {
         say(`Post ${n} of ${todo.length}: ${r.post.title} · uploading photo ${i + 1} of ${r.post.photos.length}`);
         const ph = r.post.photos[i]; const path = `${folder}/photo-${i + 1}.jpg`;
         const { error } = await sb.storage.from(BUCKET).upload(path, b64Blob(ph.data, 'image/jpeg'), { contentType: 'image/jpeg', upsert: true });
@@ -649,12 +662,17 @@ async function importCalendar() {
         media.push({ path, kind: 'image', mime: 'image/jpeg', width: ph.w, height: ph.h });
       }
       const note = `Content calendar topic: ${r.post.title}. ${r.post.note || ''}`.trim();
-      const { error } = await sb.from('social_posts').insert({ id: r.id, created_by: me.user_id, kind: r.post.photos.length > 1 ? 'carousel' : 'photo', note, media, consent: true, status: 'captioning' });
+      const kind = r.post.video ? 'reel' : media.length > 1 ? 'carousel' : 'photo';
+      const { error } = await sb.from('social_posts').insert({ id: r.id, created_by: me.user_id, kind, note, media, consent: true, status: 'captioning' });
       if (error) throw new Error(error.message);
-      const { error: e2 } = await sb.from('social_posts').update({ scheduled_at: r.at }).eq('id', r.id);
-      if (e2) console.warn('planned date not saved', e2);
-      say(`Post ${n} of ${todo.length}: ${r.post.title} · writing the caption…`);
-      try { await api('caption', { post_id: r.id }); } catch (e) { console.warn(e); }
+      // A caption written into the file is used as it is; otherwise the caption writer drafts one.
+      const patch = r.post.caption ? { scheduled_at: r.at, caption: r.post.caption, alt_text: r.post.alt_text || null, caption_error: null, status: 'review' } : { scheduled_at: r.at };
+      const { error: e2 } = await sb.from('social_posts').update(patch).eq('id', r.id);
+      if (e2) console.warn('planned date or caption not saved', e2);
+      if (!r.post.caption || e2) {
+        say(`Post ${n} of ${todo.length}: ${r.post.title} · writing the caption…`);
+        try { await api('caption', { post_id: r.id }); } catch (e) { console.warn(e); }
+      }
       done++;
     } catch (e) { failed++; console.warn(r.post.title, e); toast(`${r.post.title}: ${e.message}`); }
     bar.style.width = `${Math.round(100 * (done + failed) / todo.length)}%`;
